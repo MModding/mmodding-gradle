@@ -21,10 +21,10 @@ pluginManagement {
 	}
     repositories {
         // ...
-		maven {
-			name "JitPack"
-			url "https://jitpack.io"
-		}
+	maven {
+		name "JitPack"
+		url "https://jitpack.io"
+	}
         gradlePluginPortal()
     }
 }
