@@ -3,7 +3,7 @@
 ## Overview
 
 This project is basically a continuation of a discontinued project named yumi-gradle-mc-weaving-loom that was made by
-LambdAurora. This old project is now only a part of MModding Gradle, but it is still important to credit people for
+LambdAurora. This old project is now a part of MModding Gradle, so it is still important to credit people for
 their stuff.
 
 ## Adding it to your project
