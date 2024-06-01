@@ -19,14 +19,14 @@ pluginManagement {
 			}
 		}
 	}
-    repositories {
-        // ...
-	maven {
-		name "JitPack"
-		url "https://jitpack.io"
-	}
-        gradlePluginPortal()
-    }
+	repositories {
+		// ...
+		maven {
+			name "JitPack"
+			url "https://jitpack.io"
+		}
+        	gradlePluginPortal()
+    	}
 }
 ```
 
