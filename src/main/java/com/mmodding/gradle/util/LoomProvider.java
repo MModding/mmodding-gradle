@@ -1,4 +1,4 @@
-package dev.yumi.gradle.mc.weaving.loom.util;
+package com.mmodding.gradle.util;
 
 import net.fabricmc.loom.api.LoomGradleExtensionAPI;
 import org.gradle.api.Project;

@@ -6,7 +6,7 @@ plugins {
 }
 
 group = "dev.yumi"
-version = "1.0.0-alpha.1"
+version = "0.1.0-beta"
 val javaVersion = 17
 
 repositories {
@@ -17,7 +17,7 @@ repositories {
 	}
 	maven {
 		name = "QuiltMC"
-		url = uri("https://maven.quiltmc.org/repository/releases/")
+		url = uri("https://maven.quiltmc.org/repository/release/")
 	}
 }
 
@@ -26,25 +26,28 @@ val functionalTest: SourceSet by sourceSets.creating
 
 dependencies {
 	compileOnly(libs.jetbrains.annotations)
+
 	compileOnly(libs.loom.fabric)
-	implementation(libs.gson)
+
+	implementation(libs.quilt.parsers.json)
+
 	// Use JUnit Jupiter for testing.
 	testImplementation(libs.junit.jupiter)
 	testRuntimeOnly(libs.junit.launcher)
 }
 
 gradlePlugin {
-	website = "https://github.com/YumiProject/yumi-gradle-mc-weaving-loom"
-	vcsUrl = "https://github.com/YumiProject/yumi-gradle-mc-weaving-loom"
+	website = "https://mmodding.com"
+	vcsUrl = "https://github.com/MModding/mmodding-gradle"
 
 	// Define the plugin.
 	plugins {
-		create("yumi_gradle_mc_weaving_loom") {
-			id = "dev.yumi.gradle.mc.weaving.loom"
-			displayName = "Yumi Gradle MC Weaving Loom"
-			description = ""
-			tags = listOf("minecraft", "fabric-loom")
-			implementationClass = "dev.yumi.gradle.mc.weaving.loom.YumiWeavingLoomGradlePlugin"
+		create("mmodding_gradle") {
+			id = "com.mmodding.gradle"
+			displayName = "MModding Gradle"
+			description = "List of Gradle Tools to Help in Minecraft Mod Development"
+			tags = listOf("minecraft", "fabric-loom", "quilt-loom")
+			implementationClass = "com.mmodding.gradle.MModdingGradlePlugin"
 		}
 	}
 
@@ -77,7 +80,7 @@ tasks.withType<Javadoc>().configureEach {
 }
 
 tasks.jar {
-	from("LICENSE") {
+	from("LICENSE.md") {
 		rename { "${it}_${base.archivesName.get()}" }
 	}
 }

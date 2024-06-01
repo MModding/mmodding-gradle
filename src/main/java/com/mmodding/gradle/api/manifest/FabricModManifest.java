@@ -1,17 +1,20 @@
-package dev.yumi.gradle.mc.weaving.loom.api.manifest;
+package com.mmodding.gradle.api.manifest;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import dev.yumi.gradle.mc.weaving.loom.api.EnvironmentTarget;
+import com.mmodding.gradle.api.EnvironmentTarget;
 import org.gradle.api.Action;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.IOException;
 import java.io.Serializable;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import org.quiltmc.parsers.json.JsonWriter;
+
 public class FabricModManifest extends ModManifest implements Serializable {
+
 	private final List<Person> authors = new ArrayList<>();
 	private final List<Person> contributors = new ArrayList<>();
 
@@ -49,62 +52,62 @@ public class FabricModManifest extends ModManifest implements Serializable {
 	}
 
 	@Override
-	public JsonObject toJson() {
-		var json = new JsonObject();
-		json.addProperty("schemaVersion", 1);
-		json.addProperty("id", Objects.requireNonNull(this.namespace, "Missing namespace/mod ID in manifest declaration."));
+	public void writeJson(Path path) throws IOException {
+		JsonWriter writer = JsonWriter.json(path);
+
+		writer.name("schemaVersion").value(1)
+			.name("id").value(Objects.requireNonNull(this.namespace, "Missing namespace/mod ID in manifest declaration."));
 
 		if (this.name != null) {
-			json.addProperty("name", this.name);
+			writer.name("name").value(this.name);
 		}
 
-		json.addProperty("version", Objects.requireNonNull(this.version, "Missing version in manifest declaration."));
+		writer.name("version").value(Objects.requireNonNull(this.version, "Missing version in manifest declaration."));
 
 		if (this.description != null) {
-			json.addProperty("description", this.description);
+			writer.name("description").value(this.description);
 		}
 
 		if (this.license != null) {
-			json.addProperty("license", this.license);
+			writer.name("license").value(this.license);
 		}
 
 		if (this.environment != EnvironmentTarget.ANY) {
-			json.addProperty("environment", this.environment.getManifestName());
+			writer.name("environment").value(this.environment.getManifestName());
 		}
 
 		if (!this.authors.isEmpty()) {
-			var authorsJson = new JsonArray();
-			this.authors.forEach(person -> authorsJson.add(person.toJson()));
-			json.add("authors", authorsJson);
+			writer.name("authors").beginArray();
+			for (Person author : this.authors) {
+				author.writeJson(writer);
+			}
+			writer.endArray();
 		}
 
 		if (!this.contributors.isEmpty()) {
-			var contributorsJson = new JsonArray();
-			this.contributors.forEach(person -> contributorsJson.add(person.toJson()));
-			json.add("contributors", contributorsJson);
+			writer.name("contributors").beginArray();
+			for (Person contributor : this.contributors) {
+				contributor.writeJson(writer);
+			}
+			writer.endArray();
 		}
 
-		var contactJson = this.contact.toJson();
-		if (!contactJson.isEmpty()) {
-			json.add("contact", contactJson);
-		}
+		this.contact.writeJsonIfHavingContent(writer);
 
 		if (this.accessWidener != null) {
-			json.addProperty("accessWidener", this.accessWidener);
+			writer.name("accessWidener").value(this.accessWidener);
 		}
 
 		if (!this.mixins.isEmpty()) {
-			json.add("mixins",
-					this.mixins.stream()
-							.map(MixinFile::toJson)
-							.collect(JsonArray::new, JsonArray::add, JsonArray::addAll)
-			);
+			writer.name("mixins").beginObject();
+			for (MixinFile mixin : this.mixins) {
+				mixin.writeJson(writer);
+			}
+			writer.endObject();
 		}
 
 		if (!this.custom.isEmpty()) {
-			json.add("custom", this.custom.toJson());
+			this.custom.writeJson(writer);
 		}
-
-		return json;
 	}
 }

@@ -1,6 +1,6 @@
-package dev.yumi.gradle.mc.weaving.loom.task;
+package com.mmodding.gradle.task;
 
-import dev.yumi.gradle.mc.weaving.loom.api.manifest.FabricModManifest;
+import com.mmodding.gradle.api.manifest.FabricModManifest;
 import org.gradle.api.provider.Property;
 import org.gradle.api.tasks.Input;
 

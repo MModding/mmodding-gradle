@@ -6,12 +6,12 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-package dev.yumi.gradle.mc.weaving.loom;
+package com.mmodding.gradle;
 
-import dev.yumi.gradle.mc.weaving.loom.api.manifest.FabricModManifest;
-import dev.yumi.gradle.mc.weaving.loom.impl.NestedJarsProcessor;
-import dev.yumi.gradle.mc.weaving.loom.task.GenerateFabricManifestTask;
-import dev.yumi.gradle.mc.weaving.loom.util.LoomProvider;
+import com.mmodding.gradle.api.manifest.FabricModManifest;
+import com.mmodding.gradle.impl.NestedJarsProcessor;
+import com.mmodding.gradle.task.GenerateFabricManifestTask;
+import com.mmodding.gradle.util.LoomProvider;
 import org.gradle.api.Action;
 import org.gradle.api.Project;
 import org.gradle.api.artifacts.Dependency;
@@ -22,19 +22,17 @@ import org.gradle.api.tasks.SourceSet;
 import javax.inject.Inject;
 
 /**
- * Represents the Yumi Minecraft Weaving Loom Gradle extension to configure the plugin in buildscripts.
+ * Represents MModding Gradle to configure parts of it in buildscripts.
  *
- * @author LambdAurora
- * @version 1.0.0
- * @since 1.0.0
+ * @author FirstMegaGame4, LambdAurora for manifests
  */
-public class YumiWeavingLoomGradleExtension {
+public class MModdingGradle {
 	private final Project project;
 	private final LoomProvider loomProvider;
 	private final NestedJarsProcessor nestedJarsProcessor;
 
 	@Inject
-	public YumiWeavingLoomGradleExtension(final ObjectFactory objects, final Project project) {
+	public MModdingGradle(final ObjectFactory objects, final Project project) {
 		this.project = project;
 		this.loomProvider = new LoomProvider(project);
 		this.nestedJarsProcessor = new NestedJarsProcessor(project);

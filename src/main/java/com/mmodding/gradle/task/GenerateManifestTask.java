@@ -1,12 +1,11 @@
-package dev.yumi.gradle.mc.weaving.loom.task;
+package com.mmodding.gradle.task;
 
-import dev.yumi.gradle.mc.weaving.loom.YumiWeavingLoomGradlePlugin;
-import dev.yumi.gradle.mc.weaving.loom.api.manifest.ModManifest;
+import com.mmodding.gradle.api.manifest.ModManifest;
+import com.mmodding.gradle.MModdingGradlePlugin;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.file.DirectoryProperty;
 import org.gradle.api.provider.Property;
 import org.gradle.api.tasks.Input;
-import org.gradle.api.tasks.Internal;
 import org.gradle.api.tasks.OutputDirectory;
 import org.gradle.api.tasks.TaskAction;
 
@@ -16,6 +15,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 public abstract class GenerateManifestTask<M extends ModManifest> extends DefaultTask {
+
 	@Input
 	public abstract Property<M> getModManifest();
 
@@ -26,7 +26,7 @@ public abstract class GenerateManifestTask<M extends ModManifest> extends Defaul
 	public GenerateManifestTask() {
 		this.setGroup("generation");
 		this.getOutputDir().convention(
-				this.getProject().getLayout().getBuildDirectory().dir("generated/generated_resources")
+			this.getProject().getLayout().getBuildDirectory().dir("generated/generated_resources")
 		);
 	}
 
@@ -39,7 +39,6 @@ public abstract class GenerateManifestTask<M extends ModManifest> extends Defaul
 			Files.delete(output);
 		}
 
-		var json = manifest.toJson();
-		Files.writeString(output, YumiWeavingLoomGradlePlugin.GSON.toJson(json));
+		manifest.writeJson(output);
 	}
 }

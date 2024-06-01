@@ -1,19 +1,20 @@
-package dev.yumi.gradle.mc.weaving.loom.api.manifest;
+package com.mmodding.gradle.api.manifest;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import dev.yumi.gradle.mc.weaving.loom.api.EnvironmentTarget;
 import org.gradle.api.Action;
 import org.gradle.api.Project;
 import org.jetbrains.annotations.NotNull;
+import org.quiltmc.parsers.json.JsonWriter;
 
+import java.io.IOException;
 import java.io.Serializable;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
 public class QuiltModManifest extends ModManifest implements Serializable {
+
 	private static final Set<String> OFFICIAL_KEYS = Set.of(
 			"schema_version",
 			"quilt_loader",
@@ -21,6 +22,7 @@ public class QuiltModManifest extends ModManifest implements Serializable {
 			"access_widener",
 			"mixin"
 	);
+
 	private String group;
 	private String intermediateMappings = "net.fabricmc:intermediary";
 	private final List<Person> authors = new ArrayList<>();
@@ -82,97 +84,87 @@ public class QuiltModManifest extends ModManifest implements Serializable {
 	}
 
 	@Override
-	public JsonObject toJson() {
-		var json = new JsonObject();
-		json.addProperty("schemaVersion", 1);
+	public void writeJson(Path path) throws IOException {
+		JsonWriter writer = JsonWriter.json(path);
+
+		writer.name("schema_version").value(1);
 
 		{
-			var quiltLoaderJson = new JsonObject();
-			json.add("quilt_loader", quiltLoaderJson);
+			writer.name("quilt_loader")
+				.beginObject()
+				.name("group").value(Objects.requireNonNull(this.group, "Missing group in manifest declaration."))
+				.name("id").value(Objects.requireNonNull(this.namespace, "Missing namespace/mod ID in manifest declaration."))
+				.name("version").value(Objects.requireNonNull(this.version, "Missing version in manifest declaration."));
 
-			quiltLoaderJson.addProperty("group",
-					Objects.requireNonNull(this.group, "Missing group in manifest declaration.")
-			);
-
-			quiltLoaderJson.addProperty("id",
-					Objects.requireNonNull(this.namespace, "Missing namespace/mod ID in manifest declaration.")
-			);
-
-			quiltLoaderJson.addProperty("version",
-					Objects.requireNonNull(this.version, "Missing version in manifest declaration.")
-			);
-
-			{
-				var metadata = new JsonObject();
+			if(this.name != null && this.description != null && this.contact.notEmpty()) {
+				writer.name("metadata")
+					.beginObject();
 
 				if (this.name != null) {
-					metadata.addProperty("name", this.name);
+					writer.name("name").value(this.name);
 				}
 
 				if (this.description != null) {
-					metadata.addProperty("description", this.description);
+					writer.name("description").value(this.description);
 				}
 
-				var contactJson = this.contact.toJson();
-				if (!contactJson.isEmpty()) {
-					metadata.add("contact", contactJson);
-				}
+				this.contact.writeJsonIfHavingContent(writer);
 
-				if (this.intermediateMappings != null) {
-					quiltLoaderJson.addProperty("intermediate_mappings", this.intermediateMappings);
-				}
-
-				if (!metadata.isEmpty()) {
-					quiltLoaderJson.add("metadata", metadata);
-				}
+				writer.endObject();
 			}
+
+			writer.endObject();
+		}
+
+		if (this.intermediateMappings != null) {
+			writer.name("intermediate_mappings").value(this.intermediateMappings);
 		}
 
 		if (this.license != null) {
-			json.addProperty("license", this.license);
+			writer.name("license").value(this.license);
 		}
 
 		{
-			var minecraftJson = new JsonObject();
-			json.add("minecraft", minecraftJson);
-
-			if (this.environment != EnvironmentTarget.ANY) {
-				minecraftJson.addProperty("environment", this.environment.getManifestName());
-			}
+			writer.name("minecraft").beginObject()
+				.name("environment").value(this.environment.getManifestName())
+				.endObject();
 		}
 
 		if (!this.authors.isEmpty()) {
-			var authorsJson = new JsonArray();
-			this.authors.forEach(person -> authorsJson.add(person.toJson()));
-			json.add("authors", authorsJson);
+			writer.name("authors").beginArray();
+			for (Person author : this.authors) {
+				author.writeJson(writer);
+			}
+			writer.endArray();
 		}
 
 		if (!this.contributors.isEmpty()) {
-			var contributorsJson = new JsonArray();
-			this.contributors.forEach(person -> contributorsJson.add(person.toJson()));
-			json.add("contributors", contributorsJson);
+			writer.name("contributors").beginArray();
+			for (Person contributor : this.contributors) {
+				contributor.writeJson(writer);
+			}
+			writer.endArray();
 		}
 
 		if (this.accessWidener != null) {
-			json.addProperty("access_widener", this.accessWidener);
+			writer.name("access_widener").value(this.accessWidener);
 		}
 
 		if (!this.mixins.isEmpty()) {
-			json.add("mixin",
-					this.mixins.stream()
-							.map(MixinFile::toJson)
-							.collect(JsonArray::new, JsonArray::add, JsonArray::addAll)
-			);
+			writer.name("mixins").beginObject();
+			for (MixinFile mixin : this.mixins) {
+				mixin.writeJson(writer);
+			}
+			writer.endObject();
 		}
 
 		if (!this.custom.isEmpty()) {
 			this.custom.forEach((key, value) -> {
 				if (!OFFICIAL_KEYS.contains(key)) {
-					json.add(key, value.toJson());
+					writer.name(key);
+					value.writeJson(writer);
 				}
 			});
 		}
-
-		return json;
 	}
 }

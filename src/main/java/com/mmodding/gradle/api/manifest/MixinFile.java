@@ -1,13 +1,13 @@
-package dev.yumi.gradle.mc.weaving.loom.api.manifest;
+package com.mmodding.gradle.api.manifest;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
-import dev.yumi.gradle.mc.weaving.loom.api.EnvironmentTarget;
+import com.mmodding.gradle.api.EnvironmentTarget;
+import org.quiltmc.parsers.json.JsonWriter;
 
+import java.io.IOException;
 import java.io.Serializable;
 
 public class MixinFile implements Serializable {
+
 	private String file;
 	private EnvironmentTarget environment;
 
@@ -36,14 +36,14 @@ public class MixinFile implements Serializable {
 		this.environment = environment;
 	}
 
-	public JsonElement toJson() {
+	public void writeJson(JsonWriter writer) throws IOException {
 		if (this.environment != EnvironmentTarget.ANY) {
-			var json = new JsonObject();
-			json.addProperty("config", this.file);
-			json.addProperty("environment", this.environment.getManifestName());
-			return json;
+			writer.beginObject();
+			writer.name("config").value(this.file);
+			writer.name("environment").value(this.environment.getManifestName());
+			writer.endObject();
 		} else {
-			return new JsonPrimitive(this.file);
+			writer.value(this.file);
 		}
 	}
 }

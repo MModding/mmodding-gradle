@@ -1,7 +1,6 @@
-package dev.yumi.gradle.mc.weaving.loom.impl;
+package com.mmodding.gradle.impl;
 
-import dev.yumi.gradle.mc.weaving.loom.YumiWeavingLoomGradlePlugin;
-import dev.yumi.gradle.mc.weaving.loom.api.manifest.ModManifest;
+import com.mmodding.gradle.api.manifest.ModManifest;
 import net.fabricmc.loom.LoomGradleExtension;
 import net.fabricmc.loom.task.RemapJarTask;
 import net.fabricmc.loom.task.RemapTaskConfiguration;
@@ -14,7 +13,6 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileSystems;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -26,12 +24,11 @@ import java.util.stream.Collectors;
  * <p>
  * This nested JAR processor only targets JARs that are not originally mods.
  *
- * @author LambdAurora
- * @version 1.0.0
- * @since 1.0.0
+ * @author FirstMegaGame4, LambdAurora
  */
 @ApiStatus.Internal
 public class NestedJarsProcessor {
+
 	private final Map<Metadata, Set<ModManifest>> toProcess = new HashMap<>();
 	private final Project project;
 	private boolean injected = false;
@@ -47,7 +44,7 @@ public class NestedJarsProcessor {
 	 * @param manifest the manifest to inject
 	 */
 	public void addManifest(@NotNull Metadata metadata, @NotNull ModManifest manifest) {
-		var set = this.toProcess.computeIfAbsent(metadata, (ignored) -> new HashSet<>());
+		var set = this.toProcess.computeIfAbsent(metadata, md -> new HashSet<>());
 
 		for (var oManifest : set) {
 			if (oManifest.getClass().equals(manifest.getClass())) {
@@ -175,8 +172,7 @@ public class NestedJarsProcessor {
 		try (var zipFs = FileSystems.newFileSystem(path)) {
 			for (var manifest : manifests) {
 				var manifestPath = zipFs.getPath(manifest.getFileName());
-
-				Files.writeString(manifestPath, YumiWeavingLoomGradlePlugin.GSON.toJson(manifest.toJson()));
+				manifest.writeJson(manifestPath);
 			}
 		} catch (IOException e) {
 			throw new RuntimeException(e);

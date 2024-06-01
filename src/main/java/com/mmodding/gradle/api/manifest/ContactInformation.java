@@ -1,7 +1,8 @@
-package dev.yumi.gradle.mc.weaving.loom.api.manifest;
+package com.mmodding.gradle.api.manifest;
 
-import com.google.gson.JsonObject;
+import org.quiltmc.parsers.json.JsonWriter;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.VarHandle;
@@ -10,6 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ContactInformation implements Serializable {
+
 	/**
 	 * Contact e-mail pertaining to the mod. Must be a valid e-mail address.
 	 */
@@ -94,18 +96,52 @@ public class ContactInformation implements Serializable {
 		this.twitter = twitter;
 	}
 
-	public JsonObject toJson() {
-		var json = new JsonObject();
+	public boolean notEmpty() {
+		Map<String, String> entries = new HashMap<>();
 
 		for (var field : FIELDS.entrySet()) {
 			var value = (String) field.getValue().get(this);
 
 			if (value != null) {
-				json.addProperty(field.getKey(), value);
+				entries.put(field.getKey(), value);
 			}
 		}
 
-		return json;
+		return !entries.isEmpty();
+	}
+
+	public void writeJsonIfHavingContent(JsonWriter writer) throws IOException {
+		Map<String, String> entries = new HashMap<>();
+
+		for (var field : FIELDS.entrySet()) {
+			var value = (String) field.getValue().get(this);
+
+			if (value != null) {
+				entries.put(field.getKey(), value);
+			}
+		}
+
+		if (!entries.isEmpty()) {
+			writer.name("contact").beginObject();
+			for (Map.Entry<String, String> entry : entries.entrySet()) {
+				writer.name(entry.getKey()).value(entry.getValue());
+			}
+			writer.endObject();
+		}
+	}
+
+	public void writeJson(JsonWriter writer) throws IOException {
+		writer.beginObject();
+
+		for (var field : FIELDS.entrySet()) {
+			var value = (String) field.getValue().get(this);
+
+			if (value != null) {
+				writer.name(field.getKey()).value(value);
+			}
+		}
+
+		writer.endObject();
 	}
 
 	static {

@@ -1,18 +1,20 @@
-package dev.yumi.gradle.mc.weaving.loom.api.manifest;
+package com.mmodding.gradle.api.manifest;
 
-import com.google.gson.JsonObject;
-import dev.yumi.gradle.mc.weaving.loom.api.EnvironmentTarget;
+import com.mmodding.gradle.api.EnvironmentTarget;
 import groovy.transform.Internal;
 import org.gradle.api.Action;
 import org.gradle.api.Project;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.IOException;
 import java.io.Serializable;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
 public abstract class ModManifest implements Serializable {
+
 	protected String namespace;
 	protected String name;
 	protected String version;
@@ -117,5 +119,5 @@ public abstract class ModManifest implements Serializable {
 		action.execute(this.custom);
 	}
 
-	public abstract JsonObject toJson();
+	public abstract void writeJson(Path path) throws IOException;
 }

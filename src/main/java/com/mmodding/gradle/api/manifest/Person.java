@@ -1,14 +1,14 @@
-package dev.yumi.gradle.mc.weaving.loom.api.manifest;
+package com.mmodding.gradle.api.manifest;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
 import org.gradle.api.Action;
 import org.jetbrains.annotations.NotNull;
+import org.quiltmc.parsers.json.JsonWriter;
 
+import java.io.IOException;
 import java.io.Serializable;
 
 public class Person implements Serializable {
+
 	private final String name;
 	private ContactInformation contact;
 
@@ -36,14 +36,15 @@ public class Person implements Serializable {
 		action.execute(this.contact);
 	}
 
-	public JsonElement toJson() {
+	public void writeJson(JsonWriter writer) throws IOException {
 		if (this.contact == null) {
-			return new JsonPrimitive(this.name);
+			writer.value(this.name);
 		} else {
-			var json = new JsonObject();
-			json.addProperty("name", this.name);
-			json.add("contact", this.contact.toJson());
-			return json;
+			writer.beginObject()
+				.name("name").value(this.name)
+				.name("contact");
+			this.contact.writeJson(writer);
+			writer.endObject();
 		}
 	}
 }

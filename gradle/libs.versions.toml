@@ -1,16 +1,26 @@
 [versions]
-jetbrains-annotations = "24.0.1"
+jetbrains_annotations = "24.0.1"
+
+# Loom
 loom = "1.6.+"
-gson = "2.10.1"
+
+# Parsing
+quilt_parsers = "0.3.0"
+
 # Testing
-junit-jupiter = "5.10.0"
-junit-launcher = "1.10.0"
+junit_jupiter = "5.10.0"
+junit_launcher = "1.10.0"
 
 [libraries]
-jetbrains-annotations = { module = "org.jetbrains:annotations", version.ref = "jetbrains-annotations" }
-loom-fabric = { module = "net.fabricmc:fabric-loom", version.ref = "loom" }
-loom-quilt = { module = "org.quiltmc:loom", version.ref = "loom" }
-gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
+jetbrains_annotations = { module = "org.jetbrains:annotations", version.ref = "jetbrains_annotations" }
+
+# Loom
+loom_fabric = { module = "net.fabricmc:fabric-loom", version.ref = "loom" }
+loom_quilt = { module = "org.quiltmc:loom", version.ref = "loom" }
+
+# Parsing
+quilt_parsers_json = { module = "org.quiltmc.parsers:json", version.ref = "quilt_parsers" }
+
 # Testing
-junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit-jupiter" }
-junit-launcher = { module = "org.junit.platform:junit-platform-launcher", version.ref = "junit-launcher" }
+junit_jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit_jupiter" }
+junit_launcher = { module = "org.junit.platform:junit-platform-launcher", version.ref = "junit_launcher" }

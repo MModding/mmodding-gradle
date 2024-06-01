@@ -1,4 +1,4 @@
-package dev.yumi.gradle.mc.weaving.loom.api;
+package com.mmodding.gradle.api;
 
 public enum EnvironmentTarget {
 	ANY("*"),
