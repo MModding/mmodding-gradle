@@ -27,6 +27,6 @@ public class MModdingGradlePlugin implements Plugin<Project> {
 
 	@Override
 	public void apply(Project project) {
-		project.getExtensions().create("modding", MModdingGradle.class, project);
+		project.getExtensions().create("mmodding", MModdingGradle.class, project);
 	}
 }
