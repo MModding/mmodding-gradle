@@ -1,12 +1,10 @@
 plugins {
-	id("dev.yumi.gradle.licenser").version("1.1.+")
 	id("com.gradle.plugin-publish").version("1.2.0")
 	id("maven-publish")
-	id("signing")
 }
 
 group = "dev.yumi"
-version = "0.1.0-beta"
+version = "0.0.1-alpha"
 val javaVersion = 17
 
 repositories {
@@ -42,7 +40,7 @@ gradlePlugin {
 
 	// Define the plugin.
 	plugins {
-		create("mmodding_gradle") {
+		register("mmodding_gradle") {
 			id = "com.mmodding.gradle"
 			displayName = "MModding Gradle"
 			description = "List of Gradle Tools to Help in Minecraft Mod Development"
@@ -85,19 +83,6 @@ tasks.jar {
 	}
 }
 
-license {
-	// rule(file("codeformat/HEADER"))
-	// exclude("scenarios/**")
-}
-
-signing {
-	val signingKeyId: String? by project
-	val signingKey: String? by project
-	val signingPassword: String? by project
-	isRequired = signingKeyId != null && signingKey != null && signingPassword != null
-	useInMemoryPgpKeys(signingKeyId, signingKey, signingPassword)
-}
-
 configurations["functionalTestImplementation"].extendsFrom(configurations.testImplementation.get())
 
 val functionalTestTask = tasks.register<Test>("functionalTest") {
@@ -114,7 +99,6 @@ tasks.check {
 tasks.withType<Test>().configureEach {
 	// Using JUnitPlatform for running tests
 	useJUnitPlatform()
-	systemProperty("yumi.gradle.licenser.debug", System.getProperty("yumi.gradle.licenser.debug"))
 
 	testLogging {
 		events("passed")

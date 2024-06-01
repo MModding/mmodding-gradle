@@ -27,6 +27,7 @@ import javax.inject.Inject;
  * @author FirstMegaGame4, LambdAurora for manifests
  */
 public class MModdingGradle {
+
 	private final Project project;
 	private final LoomProvider loomProvider;
 	private final NestedJarsProcessor nestedJarsProcessor;
