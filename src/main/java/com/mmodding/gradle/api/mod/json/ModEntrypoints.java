@@ -21,39 +21,20 @@ public class ModEntrypoints implements Serializable {
 		return this.entrypoints.isEmpty();
 	}
 
-	public void init(Class<?>... entrypoints) {
+	public void init(Set<String> entrypoints) {
 		this.custom(this.isQuilt ? "init" : "main", entrypoints);
 	}
 
-	public void client(Class<?>... entrypoints) {
+	public void client(Set<String> entrypoints) {
 		this.custom(this.isQuilt ? "client_init" : "client", entrypoints);
 	}
 
-	public void server(Class<?>... entrypoints) {
+	public void server(Set<String> entrypoints) {
 		this.custom(this.isQuilt ? "server_init" : "server", entrypoints);
 	}
 
-	public void init(String... entrypoints) {
-		this.custom(this.isQuilt ? "init" : "main", entrypoints);
-	}
-
-	public void client(String... entrypoints) {
-		this.custom(this.isQuilt ? "client_init" : "client", entrypoints);
-	}
-
-	public void server(String... entrypoints) {
-		this.custom(this.isQuilt ? "server_init" : "server", entrypoints);
-	}
-
-	public void custom(String key, Class<?>... entrypoints) {
-		this.custom(
-			key, Arrays.stream(entrypoints).map(entrypoint -> entrypoint.getName().replace(".", "/").replace("$", "\\u0024"))
-				.toArray(String[]::new)
-		);
-	}
-
-	public void custom(String key, String... entrypoints) {
-		this.entrypoints.put(key, Arrays.stream(entrypoints).collect(Collectors.toSet()));
+	public void custom(String key, Set<String> entrypoints) {
+		this.entrypoints.put(key, entrypoints.stream().map(entrypoint -> entrypoint.replace(".", "/").replace("$", "\\u0024")).collect(Collectors.toSet()));
 	}
 
 	public void writeJson(JsonWriter writer) throws IOException {

@@ -3,7 +3,10 @@ package com.mmodding.gradle.api.mod.json;
 import org.gradle.api.Action;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class InjectedInterfaces implements Serializable {
@@ -14,15 +17,17 @@ public class InjectedInterfaces implements Serializable {
 		return this.iifs.isEmpty();
 	}
 
-	public void apply(Class<?> target, Class<?>... iifs) {
-		this.apply(
-			target.getName().replace(".", "/").replace("$", "\\u0024"),
-			Arrays.stream(iifs).map(iif -> iif.getName().replace(".", "/").replace("$", "\\u0024")).toArray(String[]::new)
-		);
+	public void inject(String target, String iif) {
+		String patched = target.replace(".", "/").replace("$", "\\u0024");
+		this.iifs.putIfAbsent(patched, new HashSet<>());
+		this.iifs.get(patched).add(iif.replace(".", "/").replace("$", "\\u0024"));
 	}
 
-	public void apply(String target, String... iifs) {
-		this.iifs.put(target, Arrays.stream(iifs).collect(Collectors.toSet()));
+	public void inject(String target, Set<String> iifs) {
+		this.iifs.put(
+			target.replace(".", "/").replace("$", "\\u0024"),
+			iifs.stream().map(iif -> iif.replace(".", "/").replace("$", "\\u0024")).collect(Collectors.toSet())
+		);
 	}
 
 	public void fill(CustomElement.CustomBlock custom, boolean isQuilt) {
