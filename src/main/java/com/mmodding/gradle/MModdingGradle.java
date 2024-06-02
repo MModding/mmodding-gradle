@@ -44,7 +44,7 @@ public class MModdingGradle {
 		fmj.fillDefaults(this.project);
 		action.execute(fmj);
 
-		GenerateFabricModJson task = this.project.getTasks().create("fmjGeneration", GenerateFabricModJson.class);
+		GenerateFabricModJson task = this.project.getTasks().create("generateFmj", GenerateFabricModJson.class);
 		task.getModJson().set(fmj);
 		this.project.getTasks().getByPath("ideaSyncTask").dependsOn(task);
 
