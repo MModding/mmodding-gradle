@@ -25,10 +25,21 @@ pluginManagement {
 			name "JitPack"
 			url "https://jitpack.io"
 		}
-        	gradlePluginPortal()
-    	}
+		maven {
+			name "QuiltMC"
+			url "https://maven.quiltmc.org/repository/release"
+		}
+		gradlePluginPortal()
+	}
 }
 ```
+
+***Why is the QuiltMC maven needed??? Do I need to be on QuiltMC to use this plugin???***
+<br>
+No, you do not need to use the QuiltMC Toolchain to use this plugin. However, this plugin uses the
+[Quilt Parsers](https://github.com/QuiltMC/quilt-parsers) library to handle JSON writing, but it is only
+a standalone Java Library, which is not even needed at runtime for Minecraft, since it is only used
+for your gradle project management. You do not need to have it as a dependency when playing Minecraft.
 
 In your `libs.versions.toml`, inside the `plugins` category:
 
