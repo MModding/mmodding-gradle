@@ -17,13 +17,13 @@ public class InjectedInterfaces implements Serializable {
 		return this.iifs.isEmpty();
 	}
 
-	public void inject(String target, String iif) {
+	public void injectTo(String target, String iif) {
 		String patched = target.replace(".", "/").replace("$", "\\u0024");
 		this.iifs.putIfAbsent(patched, new HashSet<>());
 		this.iifs.get(patched).add(iif.replace(".", "/").replace("$", "\\u0024"));
 	}
 
-	public void inject(String target, Set<String> iifs) {
+	public void injectTo(String target, Set<String> iifs) {
 		this.iifs.put(
 			target.replace(".", "/").replace("$", "\\u0024"),
 			iifs.stream().map(iif -> iif.replace(".", "/").replace("$", "\\u0024")).collect(Collectors.toSet())
