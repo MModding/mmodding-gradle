@@ -47,7 +47,7 @@ public class ModEntrypoints implements Serializable {
 
 	public void custom(String key, Class<?>... entrypoints) {
 		this.custom(
-			key, Arrays.stream(entrypoints).map(entrypoint -> entrypoint.getName().replace(".", "/"))
+			key, Arrays.stream(entrypoints).map(entrypoint -> entrypoint.getName().replace(".", "/").replace("$", "\\u0024"))
 				.toArray(String[]::new)
 		);
 	}

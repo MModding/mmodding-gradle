@@ -16,8 +16,8 @@ public class InjectedInterfaces implements Serializable {
 
 	public void apply(Class<?> target, Class<?>... iifs) {
 		this.apply(
-			target.getName().replace(".", "/"),
-			Arrays.stream(iifs).map(iif -> iif.getName().replace(".", "/")).toArray(String[]::new)
+			target.getName().replace(".", "/").replace("$", "\\u0024"),
+			Arrays.stream(iifs).map(iif -> iif.getName().replace(".", "/").replace("$", "\\u0024")).toArray(String[]::new)
 		);
 	}
 
