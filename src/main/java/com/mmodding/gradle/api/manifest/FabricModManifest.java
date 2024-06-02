@@ -99,11 +99,11 @@ public class FabricModManifest extends ModManifest implements Serializable {
 		}
 
 		if (!this.mixins.isEmpty()) {
-			writer.name("mixins").beginObject();
+			writer.name("mixins").beginArray();
 			for (MixinFile mixin : this.mixins) {
 				mixin.writeJson(writer);
 			}
-			writer.endObject();
+			writer.endArray();
 		}
 
 		if (!this.custom.isEmpty()) {
