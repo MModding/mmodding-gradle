@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "com.mmodding"
-version = "0.0.3-alpha"
+version = "0.0.4-alpha"
 val javaVersion = 17
 
 repositories {
