@@ -1,4 +1,4 @@
-package com.mmodding.gradle.api.manifest;
+package com.mmodding.gradle.api.mod.json;
 
 import org.gradle.api.Action;
 import org.jetbrains.annotations.NotNull;

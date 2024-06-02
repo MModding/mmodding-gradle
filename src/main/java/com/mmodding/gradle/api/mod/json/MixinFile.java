@@ -1,4 +1,4 @@
-package com.mmodding.gradle.api.manifest;
+package com.mmodding.gradle.api.mod.json;
 
 import com.mmodding.gradle.api.EnvironmentTarget;
 import org.quiltmc.parsers.json.JsonWriter;

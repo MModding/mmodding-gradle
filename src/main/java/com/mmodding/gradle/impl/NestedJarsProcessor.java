@@ -1,6 +1,6 @@
 package com.mmodding.gradle.impl;
 
-import com.mmodding.gradle.api.manifest.ModManifest;
+import com.mmodding.gradle.api.mod.json.ModJson;
 import net.fabricmc.loom.LoomGradleExtension;
 import net.fabricmc.loom.task.RemapJarTask;
 import net.fabricmc.loom.task.RemapTaskConfiguration;
@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 @ApiStatus.Internal
 public class NestedJarsProcessor {
 
-	private final Map<Metadata, Set<ModManifest>> toProcess = new HashMap<>();
+	private final Map<Metadata, Set<ModJson<?, ?>>> toProcess = new HashMap<>();
 	private final Project project;
 	private boolean injected = false;
 
@@ -43,7 +43,7 @@ public class NestedJarsProcessor {
 	 * @param metadata the dependency identifier
 	 * @param manifest the manifest to inject
 	 */
-	public void addManifest(@NotNull Metadata metadata, @NotNull ModManifest manifest) {
+	public void addManifest(@NotNull Metadata metadata, @NotNull ModJson<?, ?> manifest) {
 		var set = this.toProcess.computeIfAbsent(metadata, md -> new HashSet<>());
 
 		for (var oManifest : set) {

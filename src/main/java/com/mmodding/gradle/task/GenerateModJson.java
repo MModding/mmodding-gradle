@@ -1,7 +1,7 @@
 package com.mmodding.gradle.task;
 
-import com.mmodding.gradle.api.manifest.ModManifest;
-import com.mmodding.gradle.MModdingGradlePlugin;
+import com.mmodding.gradle.api.mod.json.ModJson;
+import com.mmodding.gradle.api.mod.json.dependency.ModDependencies;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.file.DirectoryProperty;
 import org.gradle.api.provider.Property;
@@ -14,16 +14,16 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-public abstract class GenerateManifestTask<M extends ModManifest> extends DefaultTask {
+public abstract class GenerateModJson<R extends ModDependencies.ModDependency, D extends ModDependencies<R>, M extends ModJson<R, D>> extends DefaultTask {
 
 	@Input
-	public abstract Property<M> getModManifest();
+	public abstract Property<M> getModJson();
 
 	@OutputDirectory
 	public abstract DirectoryProperty getOutputDir();
 
 	@Inject
-	public GenerateManifestTask() {
+	public GenerateModJson() {
 		this.setGroup("generation");
 		this.getOutputDir().convention(
 			this.getProject().getLayout().getBuildDirectory().dir("generated/generated_resources")
@@ -32,13 +32,13 @@ public abstract class GenerateManifestTask<M extends ModManifest> extends Defaul
 
 	@TaskAction
 	public void generate() throws IOException {
-		var manifest = this.getModManifest().get();
-		Path output = this.getOutputDir().getAsFile().get().toPath().resolve(manifest.getFileName());
+		var modJson = this.getModJson().get();
+		Path output = this.getOutputDir().getAsFile().get().toPath().resolve(modJson.getFileName());
 
 		if (Files.exists(output)) {
 			Files.delete(output);
 		}
 
-		manifest.writeJson(output);
+		modJson.writeJson(output);
 	}
 }

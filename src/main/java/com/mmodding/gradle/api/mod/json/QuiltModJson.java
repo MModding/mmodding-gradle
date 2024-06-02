@@ -1,5 +1,6 @@
-package com.mmodding.gradle.api.manifest;
+package com.mmodding.gradle.api.mod.json;
 
+import com.mmodding.gradle.api.mod.json.dependency.QuiltModDependencies;
 import org.gradle.api.Action;
 import org.gradle.api.Project;
 import org.jetbrains.annotations.NotNull;
@@ -13,24 +14,26 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
-public class QuiltModManifest extends ModManifest implements Serializable {
+public class QuiltModJson extends ModJson<QuiltModDependencies.QuiltModDependency, QuiltModDependencies> implements Serializable {
 
 	private static final Set<String> OFFICIAL_KEYS = Set.of(
-			"schema_version",
-			"quilt_loader",
-			"minecraft",
-			"access_widener",
-			"mixin"
+		"schema_version",
+		"quilt_loader",
+		"minecraft",
+		"access_widener",
+		"mixin"
 	);
+
+	private final List<Person> authors = new ArrayList<>();
+	private final List<Person> contributors = new ArrayList<>();
+	private final QuiltModDependencies dependencies = new QuiltModDependencies();
 
 	private String group;
 	private String intermediateMappings = "net.fabricmc:intermediary";
-	private final List<Person> authors = new ArrayList<>();
-	private final List<Person> contributors = new ArrayList<>();
 
 	@Override
 	public @NotNull String getFileName() {
-		return "fabric.mod.json";
+		return "quilt.mod.json";
 	}
 
 	@Override
@@ -84,6 +87,16 @@ public class QuiltModManifest extends ModManifest implements Serializable {
 	}
 
 	@Override
+	public QuiltModDependencies getDependencies() {
+		return this.dependencies;
+	}
+
+	@Override
+	public void withDependencies(Action<QuiltModDependencies> action) {
+		action.execute(this.dependencies);
+	}
+
+	@Override
 	public void writeJson(Path path) throws IOException {
 		JsonWriter writer = JsonWriter.json(path);
 		writer.beginObject();
@@ -112,6 +125,11 @@ public class QuiltModManifest extends ModManifest implements Serializable {
 				this.contact.writeJsonIfHavingContent(writer);
 
 				writer.endObject();
+			}
+
+			if (!this.dependencies.isEmpty()) {
+				writer.name("depends");
+				this.dependencies.writeJson(writer);
 			}
 
 			writer.endObject();

@@ -8,9 +8,9 @@
 
 package com.mmodding.gradle;
 
-import com.mmodding.gradle.api.manifest.FabricModManifest;
+import com.mmodding.gradle.api.mod.json.FabricModJson;
 import com.mmodding.gradle.impl.NestedJarsProcessor;
-import com.mmodding.gradle.task.GenerateFabricManifestTask;
+import com.mmodding.gradle.task.GenerateFabricModJson;
 import com.mmodding.gradle.util.LoomProvider;
 import org.gradle.api.Action;
 import org.gradle.api.Project;
@@ -24,7 +24,7 @@ import javax.inject.Inject;
 /**
  * Represents MModding Gradle to configure parts of it in buildscripts.
  *
- * @author FirstMegaGame4, LambdAurora for manifests
+ * @author FirstMegaGame4, LambdAurora for mod json base
  */
 public class MModdingGradle {
 
@@ -39,32 +39,32 @@ public class MModdingGradle {
 		this.nestedJarsProcessor = new NestedJarsProcessor(project);
 	}
 
-	public void addFabricModManifest(Action<FabricModManifest> action) {
-		var fmj = new FabricModManifest();
+	public void configureFabricModJson(Action<FabricModJson> action) {
+		var fmj = new FabricModJson();
 		fmj.fillDefaults(this.project);
 		action.execute(fmj);
 
-		var task = this.project.getTasks().create("genFabricModManifest", GenerateFabricManifestTask.class);
-		task.getModManifest().set(fmj);
+		GenerateFabricModJson task = this.project.getTasks().create("genFabricModManifest", GenerateFabricModJson.class);
+		task.getModJson().set(fmj);
 		this.project.getTasks().getByPath("ideaSyncTask").dependsOn(task);
 
-		final JavaPluginExtension javaExtension = project.getExtensions().getByType(JavaPluginExtension.class);
-		final SourceSet mainSourceSet = javaExtension.getSourceSets().getByName("main");
+		JavaPluginExtension javaExtension = project.getExtensions().getByType(JavaPluginExtension.class);
+		SourceSet mainSourceSet = javaExtension.getSourceSets().getByName("main");
 		mainSourceSet.getResources().srcDir(task);
 	}
 
-	public Dependency withFabricManifest(Dependency dependency, Action<FabricModManifest> action) {
+	public Dependency configureFMJForDependency(Dependency dependency, Action<FabricModJson> action) {
 		this.nestedJarsProcessor.injectIntoTask(this.project);
 
-		var manifest = new FabricModManifest();
-		manifest.setName(dependency.getName());
-		manifest.setVersion(dependency.getVersion());
+		FabricModJson modJson = new FabricModJson();
+		modJson.setName(dependency.getName());
+		modJson.setVersion(dependency.getVersion());
 
-		action.execute(manifest);
+		action.execute(modJson);
 
 		this.nestedJarsProcessor.addManifest(
 			new NestedJarsProcessor.Metadata(dependency.getGroup(), dependency.getName(), dependency.getVersion()),
-			manifest
+			modJson
 		);
 
 		return dependency;

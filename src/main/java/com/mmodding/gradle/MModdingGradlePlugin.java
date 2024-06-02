@@ -14,7 +14,7 @@ import org.gradle.api.Project;
 /**
  * Represents the Yumi Minecraft Weaving Loom Gradle plugin.
  *
- * @author FirstMegaGame4, LambdAurora for manifests
+ * @author FirstMegaGame4, LambdAurora for mod json base
  */
 public class MModdingGradlePlugin implements Plugin<Project> {
 

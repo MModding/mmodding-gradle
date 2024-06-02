@@ -1,6 +1,7 @@
-package com.mmodding.gradle.api.manifest;
+package com.mmodding.gradle.api.mod.json;
 
 import com.mmodding.gradle.api.EnvironmentTarget;
+import com.mmodding.gradle.api.mod.json.dependency.FabricModDependencies;
 import org.gradle.api.Action;
 import org.jetbrains.annotations.NotNull;
 
@@ -13,10 +14,11 @@ import java.util.Objects;
 
 import org.quiltmc.parsers.json.JsonWriter;
 
-public class FabricModManifest extends ModManifest implements Serializable {
+public class FabricModJson extends ModJson<FabricModDependencies.FabricModDependency, FabricModDependencies> implements Serializable {
 
 	private final List<Person> authors = new ArrayList<>();
 	private final List<Person> contributors = new ArrayList<>();
+	private final FabricModDependencies dependencies = new FabricModDependencies();
 
 	@Override
 	public @NotNull String getFileName() {
@@ -49,6 +51,16 @@ public class FabricModManifest extends ModManifest implements Serializable {
 		var person = new Person(name);
 		action.execute(person);
 		this.contributors.add(person);
+	}
+
+	@Override
+	public FabricModDependencies getDependencies() {
+		return this.dependencies;
+	}
+
+	@Override
+	public void withDependencies(Action<FabricModDependencies> action) {
+		action.execute(this.dependencies);
 	}
 
 	@Override
@@ -94,6 +106,11 @@ public class FabricModManifest extends ModManifest implements Serializable {
 		}
 
 		this.contact.writeJsonIfHavingContent(writer);
+
+		if (!this.dependencies.isEmpty()) {
+			writer.name("depends");
+			this.dependencies.writeJson(writer);
+		}
 
 		if (this.accessWidener != null) {
 			writer.name("accessWidener").value(this.accessWidener);

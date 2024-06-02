@@ -1,6 +1,8 @@
-package com.mmodding.gradle.api.manifest;
+package com.mmodding.gradle.api.mod.json;
 
 import com.mmodding.gradle.api.EnvironmentTarget;
+import com.mmodding.gradle.api.mod.json.dependency.ModDependencies;
+import com.mmodding.gradle.api.mod.json.injected.InjectedInterfaces;
 import groovy.transform.Internal;
 import org.gradle.api.Action;
 import org.gradle.api.Project;
@@ -13,7 +15,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class ModManifest implements Serializable {
+public abstract class ModJson<R extends ModDependencies.ModDependency, D extends ModDependencies<R>> implements Serializable {
 
 	protected String namespace;
 	protected String name;
@@ -24,6 +26,7 @@ public abstract class ModManifest implements Serializable {
 	protected final ContactInformation contact = new ContactInformation();
 	protected final List<MixinFile> mixins = new ArrayList<>();
 	protected String accessWidener;
+	protected final InjectedInterfaces injectedInterfaces = new InjectedInterfaces();
 	protected final CustomElement.CustomBlock custom = new CustomElement.CustomBlock();
 
 	public void fillDefaults(Project project) {
@@ -91,6 +94,10 @@ public abstract class ModManifest implements Serializable {
 		action.execute(this.contact);
 	}
 
+	public abstract D getDependencies();
+
+	public abstract void withDependencies(Action<D> action);
+
 	public List<MixinFile> getMixins() {
 		return this.mixins;
 	}
@@ -111,8 +118,16 @@ public abstract class ModManifest implements Serializable {
 		this.accessWidener = accessWidener;
 	}
 
+	public InjectedInterfaces getInjectedInterfaces() {
+		return this.injectedInterfaces;
+	}
+
+	public void withInjectedInterfaces(Action<InjectedInterfaces> action) {
+		action.execute(this.injectedInterfaces);
+	}
+
 	public CustomElement.CustomBlock getCustom() {
-		return custom;
+		return this.custom;
 	}
 
 	public void withCustom(Action<CustomElement.CustomBlock> action) {
