@@ -34,7 +34,7 @@ public class ModEntrypoints implements Serializable {
 	}
 
 	public void custom(String key, Set<String> entrypoints) {
-		this.entrypoints.put(key, entrypoints.stream().map(entrypoint -> entrypoint.replace(".", "/").replace("$", "\\u0024")).collect(Collectors.toSet()));
+		this.entrypoints.put(key, entrypoints.stream().map(entrypoint -> entrypoint.replace("/", ".").replace("$", "\\u0024")).collect(Collectors.toSet()));
 	}
 
 	public void writeJson(JsonWriter writer) throws IOException {
