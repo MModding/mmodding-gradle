@@ -23,8 +23,8 @@ public abstract class ModJson<R extends ModDependencies.ModDependency, D extends
 	protected String license;
 	protected String icon;
 	protected EnvironmentTarget environment = EnvironmentTarget.ANY;
-	protected final ModEntrypoints entrypoints = new ModEntrypoints(this instanceof QuiltModJson);
 	protected final ContactInformation contact = new ContactInformation();
+	protected final ModEntrypoints entrypoints = new ModEntrypoints(this instanceof QuiltModJson);
 	protected final List<MixinFile> mixins = new ArrayList<>();
 	protected String accessWidener;
 	protected final InjectedInterfaces injectedInterfaces = new InjectedInterfaces();
@@ -101,6 +101,14 @@ public abstract class ModJson<R extends ModDependencies.ModDependency, D extends
 
 	public void withContact(Action<ContactInformation> action) {
 		action.execute(this.contact);
+	}
+
+	public ModEntrypoints getEntrypoints() {
+		return this.entrypoints;
+	}
+
+	public void withEntrypoints(Action<ModEntrypoints> action) {
+		action.execute(this.entrypoints);
 	}
 
 	public abstract D getDependencies();
