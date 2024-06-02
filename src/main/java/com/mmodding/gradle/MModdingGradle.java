@@ -14,6 +14,7 @@ import com.mmodding.gradle.task.GenerateFabricModJson;
 import com.mmodding.gradle.util.LoomProvider;
 import org.gradle.api.Action;
 import org.gradle.api.Project;
+import org.gradle.api.Task;
 import org.gradle.api.artifacts.Dependency;
 import org.gradle.api.model.ObjectFactory;
 import org.gradle.api.plugins.JavaPluginExtension;
@@ -40,7 +41,8 @@ public class MModdingGradle {
 	}
 
 	public void configureFabricModJson(Action<FabricModJson> action) {
-		if (this.project.getTasks().findByPath("generation/generateFmj") != null) {
+		Task check = this.project.getTasks().findByPath("generation/generateFmj");
+		if (this.project.getTasks().findByPath("generateFmj") == null) {
 			var fmj = new FabricModJson();
 			fmj.fillDefaults(this.project);
 			action.execute(fmj);
@@ -55,7 +57,7 @@ public class MModdingGradle {
 		}
 		else {
 			// Behaving differently if the FabricModJson already exists
-			GenerateFabricModJson task = (GenerateFabricModJson) this.project.getTasks().getByPath("generation/generateFmj");
+			GenerateFabricModJson task = (GenerateFabricModJson) this.project.getTasks().getByName("generateFmj");
 			FabricModJson fmj = task.getModJson().get();
 			action.execute(fmj);
 			task.getModJson().set(fmj);
