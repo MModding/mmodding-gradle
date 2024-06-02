@@ -40,17 +40,26 @@ public class MModdingGradle {
 	}
 
 	public void configureFabricModJson(Action<FabricModJson> action) {
-		var fmj = new FabricModJson();
-		fmj.fillDefaults(this.project);
-		action.execute(fmj);
+		if (this.project.getTasks().findByPath("generation/generateFmj") != null) {
+			var fmj = new FabricModJson();
+			fmj.fillDefaults(this.project);
+			action.execute(fmj);
 
-		GenerateFabricModJson task = this.project.getTasks().create("generateFmj", GenerateFabricModJson.class);
-		task.getModJson().set(fmj);
-		this.project.getTasks().getByPath("ideaSyncTask").dependsOn(task);
+			GenerateFabricModJson task = this.project.getTasks().create("generateFmj", GenerateFabricModJson.class);
+			task.getModJson().set(fmj);
+			this.project.getTasks().getByPath("ideaSyncTask").dependsOn(task);
 
-		JavaPluginExtension javaExtension = project.getExtensions().getByType(JavaPluginExtension.class);
-		SourceSet mainSourceSet = javaExtension.getSourceSets().getByName("main");
-		mainSourceSet.getResources().srcDir(task);
+			JavaPluginExtension javaExtension = project.getExtensions().getByType(JavaPluginExtension.class);
+			SourceSet mainSourceSet = javaExtension.getSourceSets().getByName("main");
+			mainSourceSet.getResources().srcDir(task);
+		}
+		else {
+			// Behaving differently if the FabricModJson already exists
+			GenerateFabricModJson task = (GenerateFabricModJson) this.project.getTasks().getByPath("generation/generateFmj");
+			FabricModJson fmj = task.getModJson().get();
+			action.execute(fmj);
+			task.getModJson().set(fmj);
+		}
 	}
 
 	public Dependency configureFMJForDependency(Dependency dependency, Action<FabricModJson> action) {
