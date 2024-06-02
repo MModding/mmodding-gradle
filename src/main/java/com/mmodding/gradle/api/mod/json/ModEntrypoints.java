@@ -21,16 +21,33 @@ public class ModEntrypoints implements Serializable {
 		return this.entrypoints.isEmpty();
 	}
 
+	public void init(String entrypoint) {
+		this.custom(this.isQuilt ? "init" : "main", entrypoint);
+	}
+
 	public void init(Set<String> entrypoints) {
 		this.custom(this.isQuilt ? "init" : "main", entrypoints);
+	}
+
+	public void client(String entrypoint) {
+		this.custom(this.isQuilt ? "client_init" : "client", entrypoint);
 	}
 
 	public void client(Set<String> entrypoints) {
 		this.custom(this.isQuilt ? "client_init" : "client", entrypoints);
 	}
 
+	public void server(String entrypoint) {
+		this.custom(this.isQuilt ? "server_init" : "server", entrypoint);
+	}
+
 	public void server(Set<String> entrypoints) {
 		this.custom(this.isQuilt ? "server_init" : "server", entrypoints);
+	}
+
+	public void custom(String key, String entrypoint) {
+		this.entrypoints.putIfAbsent(key, new HashSet<>());
+		this.entrypoints.get(key).add(entrypoint);
 	}
 
 	public void custom(String key, Set<String> entrypoints) {

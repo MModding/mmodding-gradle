@@ -53,7 +53,7 @@ public abstract class ModDependencies<D extends ModDependencies.ModDependency> i
 
 	public abstract void writeJson(JsonWriter writer) throws IOException;
 
-	public abstract static class ModDependency {
+	public abstract static class ModDependency implements Serializable {
 
 		protected final String namespace;
 		protected final String version;
