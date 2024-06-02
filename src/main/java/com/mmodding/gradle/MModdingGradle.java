@@ -63,8 +63,8 @@ public class MModdingGradle {
 		action.execute(manifest);
 
 		this.nestedJarsProcessor.addManifest(
-				new NestedJarsProcessor.Metadata(dependency.getGroup(), dependency.getName(), dependency.getVersion()),
-				manifest
+			new NestedJarsProcessor.Metadata(dependency.getGroup(), dependency.getName(), dependency.getVersion()),
+			manifest
 		);
 
 		return dependency;

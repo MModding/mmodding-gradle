@@ -86,6 +86,7 @@ public class QuiltModManifest extends ModManifest implements Serializable {
 	@Override
 	public void writeJson(Path path) throws IOException {
 		JsonWriter writer = JsonWriter.json(path);
+		writer.beginObject();
 
 		writer.name("schema_version").value(1);
 
@@ -166,5 +167,8 @@ public class QuiltModManifest extends ModManifest implements Serializable {
 				}
 			});
 		}
+
+		writer.endObject();
+		writer.close();
 	}
 }

@@ -75,9 +75,11 @@ public interface CustomElement extends Serializable {
 
 		@Override
 		public void writeJson(JsonWriter writer) throws IOException {
+			writer.beginArray();
 			for (CustomElement element : this.values) {
 				element.writeJson(writer);
 			}
+			writer.endArray();
 		}
 	}
 
@@ -129,9 +131,7 @@ public interface CustomElement extends Serializable {
 			if (value instanceof CustomBlock block) {
 				action.execute(block);
 			} else {
-				throw new IllegalArgumentException(
-						"An element is already present at key \"" + name + "\" with value " + value + "."
-				);
+				throw new IllegalArgumentException("An element is already present at key \"" + name + "\" with value " + value + ".");
 			}
 		}
 
@@ -155,7 +155,7 @@ public interface CustomElement extends Serializable {
 		}
 
 		public void writeJson(JsonWriter writer) throws IOException {
-			writer.name("custom").beginObject();
+			writer.beginObject();
 			for (Map.Entry<String, CustomElement> element : this.properties.entrySet()) {
 				writer.name(element.getKey());
 				element.getValue().writeJson(writer);

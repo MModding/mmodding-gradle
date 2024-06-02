@@ -3,7 +3,7 @@ plugins {
 	id("maven-publish")
 }
 
-group = "dev.yumi"
+group = "com.mmodding"
 version = "0.0.1-alpha"
 val javaVersion = 17
 

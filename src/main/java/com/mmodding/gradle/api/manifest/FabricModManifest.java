@@ -54,6 +54,7 @@ public class FabricModManifest extends ModManifest implements Serializable {
 	@Override
 	public void writeJson(Path path) throws IOException {
 		JsonWriter writer = JsonWriter.json(path);
+		writer.beginObject();
 
 		writer.name("schemaVersion").value(1)
 			.name("id").value(Objects.requireNonNull(this.namespace, "Missing namespace/mod ID in manifest declaration."));
@@ -107,7 +108,11 @@ public class FabricModManifest extends ModManifest implements Serializable {
 		}
 
 		if (!this.custom.isEmpty()) {
+			writer.name("custom");
 			this.custom.writeJson(writer);
 		}
+
+		writer.endObject();
+		writer.close();
 	}
 }
