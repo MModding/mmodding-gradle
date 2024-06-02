@@ -81,12 +81,21 @@ public class FabricModJson extends ModJson<FabricModDependencies.FabricModDepend
 			writer.name("description").value(this.description);
 		}
 
+		if (this.icon != null) {
+			writer.name("icon").value(this.icon);
+		}
+
 		if (this.license != null) {
 			writer.name("license").value(this.license);
 		}
 
 		if (this.environment != EnvironmentTarget.ANY) {
 			writer.name("environment").value(this.environment.getManifestName());
+		}
+
+		if (!this.entrypoints.isEmpty()) {
+			writer.name("entrypoints");
+			this.entrypoints.writeJson(writer);
 		}
 
 		if (!this.authors.isEmpty()) {
@@ -122,6 +131,10 @@ public class FabricModJson extends ModJson<FabricModDependencies.FabricModDepend
 				mixin.writeJson(writer);
 			}
 			writer.endArray();
+		}
+
+		if (!this.injectedInterfaces.isEmpty()) {
+			this.injectedInterfaces.fill(this.custom, false);
 		}
 
 		if (!this.custom.isEmpty()) {

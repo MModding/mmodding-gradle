@@ -2,7 +2,6 @@ package com.mmodding.gradle.api.mod.json;
 
 import com.mmodding.gradle.api.EnvironmentTarget;
 import com.mmodding.gradle.api.mod.json.dependency.ModDependencies;
-import com.mmodding.gradle.api.mod.json.injected.InjectedInterfaces;
 import groovy.transform.Internal;
 import org.gradle.api.Action;
 import org.gradle.api.Project;
@@ -22,7 +21,9 @@ public abstract class ModJson<R extends ModDependencies.ModDependency, D extends
 	protected String version;
 	protected String description;
 	protected String license;
+	protected String icon;
 	protected EnvironmentTarget environment = EnvironmentTarget.ANY;
+	protected final ModEntrypoints entrypoints = new ModEntrypoints(this instanceof QuiltModJson);
 	protected final ContactInformation contact = new ContactInformation();
 	protected final List<MixinFile> mixins = new ArrayList<>();
 	protected String accessWidener;
@@ -76,6 +77,14 @@ public abstract class ModJson<R extends ModDependencies.ModDependency, D extends
 
 	public void setLicense(String license) {
 		this.license = license;
+	}
+
+	public String getIcon() {
+		return this.icon;
+	}
+
+	public void setIcon(String icon) {
+		this.icon = icon;
 	}
 
 	public EnvironmentTarget getEnvironment() {

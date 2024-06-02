@@ -122,9 +122,18 @@ public class QuiltModJson extends ModJson<QuiltModDependencies.QuiltModDependenc
 					writer.name("description").value(this.description);
 				}
 
+				if (this.icon != null) {
+					writer.name("icon").value(this.icon);
+				}
+
 				this.contact.writeJsonIfHavingContent(writer);
 
 				writer.endObject();
+			}
+
+			if (!this.entrypoints.isEmpty()) {
+				writer.name("entrypoints");
+				this.entrypoints.writeJson(writer);
 			}
 
 			if (!this.dependencies.isEmpty()) {
@@ -175,6 +184,10 @@ public class QuiltModJson extends ModJson<QuiltModDependencies.QuiltModDependenc
 				mixin.writeJson(writer);
 			}
 			writer.endObject();
+		}
+
+		if (!this.injectedInterfaces.isEmpty()) {
+			this.injectedInterfaces.fill(this.custom, false);
 		}
 
 		if (!this.custom.isEmpty()) {
