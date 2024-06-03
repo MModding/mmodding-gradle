@@ -69,13 +69,13 @@ public class FabricModJson extends ModJson<FabricModDependencies.FabricModDepend
 		writer.beginObject();
 
 		writer.name("schemaVersion").value(1)
-			.name("id").value(Objects.requireNonNull(this.namespace, "Missing namespace/mod ID in manifest declaration."));
+			.name("id").value(Objects.requireNonNull(this.namespace, "Missing namespace/mod ID in mod json declaration."));
 
 		if (this.name != null) {
 			writer.name("name").value(this.name);
 		}
 
-		writer.name("version").value(Objects.requireNonNull(this.version, "Missing version in manifest declaration."));
+		writer.name("version").value(Objects.requireNonNull(this.version, "Missing version in mod json declaration."));
 
 		if (this.description != null) {
 			writer.name("description").value(this.description);
@@ -90,7 +90,7 @@ public class FabricModJson extends ModJson<FabricModDependencies.FabricModDepend
 		}
 
 		if (this.environment != EnvironmentTarget.ANY) {
-			writer.name("environment").value(this.environment.getManifestName());
+			writer.name("environment").value(this.environment.getQualifier());
 		}
 
 		if (!this.entrypoints.isEmpty()) {
@@ -121,6 +121,11 @@ public class FabricModJson extends ModJson<FabricModDependencies.FabricModDepend
 			this.dependencies.writeJson(writer);
 		}
 
+		if (!this.provider.isEmpty()) {
+			writer.name("provides");
+			this.provider.writeJson(writer);
+		}
+
 		if (this.accessWidener != null) {
 			writer.name("accessWidener").value(this.accessWidener);
 		}
@@ -135,6 +140,10 @@ public class FabricModJson extends ModJson<FabricModDependencies.FabricModDepend
 
 		if (!this.injectedInterfaces.isEmpty()) {
 			this.injectedInterfaces.fill(this.custom, false);
+		}
+
+		if (!this.parent.isEmpty()) {
+			this.parent.fill(this.custom);
 		}
 
 		if (!this.custom.isEmpty()) {

@@ -38,31 +38,30 @@ public class NestedJarsProcessor {
 	}
 
 	/**
-	 * Adds a manifest to inject into the given dependency.
+	 * Adds a mod json to inject into the given dependency.
 	 *
 	 * @param metadata the dependency identifier
-	 * @param manifest the manifest to inject
+	 * @param modJson the mod json to inject
 	 */
-	public void addManifest(@NotNull Metadata metadata, @NotNull ModJson<?, ?> manifest) {
+	public void addModJson(@NotNull Metadata metadata, @NotNull ModJson<?, ?> modJson) {
 		var set = this.toProcess.computeIfAbsent(metadata, md -> new HashSet<>());
 
-		for (var oManifest : set) {
-			if (oManifest.getClass().equals(manifest.getClass())) {
-				throw new IllegalArgumentException("Cannot add multiple manifests of the same type to the same dependency.");
+		for (var oModJson : set) {
+			if (oModJson.getClass().equals(modJson.getClass())) {
+				throw new IllegalArgumentException("Cannot add multiple mod json of the same type to the same dependency.");
 			}
 		}
 
-		// Add some manifest data that is always relevant for non-mod libraries.
-		manifest.withCustom(block -> {
+		// Add some mod json data that is always relevant for non-mod libraries.
+		modJson.withCustom(block ->
 			block.withBlock("modmenu", modMenu -> {
-				modMenu.withArray("badges", badges -> {
-					badges.addUnique("library");
-				});
+				modMenu.withArray("badges", badges ->
+					badges.addUnique("library"));
 				modMenu.put("update_checker", false);
-			});
-		});
+			})
+		);
 
-		set.add(manifest);
+		set.add(modJson);
 	}
 
 	/**
@@ -161,18 +160,18 @@ public class NestedJarsProcessor {
 				version
 		);
 
-		var manifests = this.toProcess.get(metadata);
+		var modJsonSet = this.toProcess.get(metadata);
 
-		if (manifests == null || manifests.isEmpty()) {
+		if (modJsonSet == null || modJsonSet.isEmpty()) {
 			return;
 		}
 
 		this.project.getLogger().lifecycle("Found dependency {} to process!", metadata);
 
 		try (var zipFs = FileSystems.newFileSystem(path)) {
-			for (var manifest : manifests) {
-				var manifestPath = zipFs.getPath(manifest.getFileName());
-				manifest.writeJson(manifestPath);
+			for (var modJson : modJsonSet) {
+				var modJsonPath = zipFs.getPath(modJson.getFileName());
+				modJson.writeJson(modJsonPath);
 			}
 		} catch (IOException e) {
 			throw new RuntimeException(e);

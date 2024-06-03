@@ -25,9 +25,11 @@ public abstract class ModJson<R extends ModDependencies.ModDependency, D extends
 	protected EnvironmentTarget environment = EnvironmentTarget.ANY;
 	protected final ContactInformation contact = new ContactInformation();
 	protected final ModEntrypoints entrypoints = new ModEntrypoints(this instanceof QuiltModJson);
+	protected final NamespaceProvider provider = new NamespaceProvider();
 	protected final List<MixinFile> mixins = new ArrayList<>();
 	protected String accessWidener;
 	protected final InjectedInterfaces injectedInterfaces = new InjectedInterfaces();
+	protected ParentSchema parent = new ParentSchema(null);
 	protected final CustomElement.CustomBlock custom = new CustomElement.CustomBlock();
 
 	public void fillDefaults(Project project) {
@@ -115,6 +117,14 @@ public abstract class ModJson<R extends ModDependencies.ModDependency, D extends
 
 	public abstract void withDependencies(Action<D> action);
 
+	public NamespaceProvider getProvider() {
+		return this.provider;
+	}
+
+	public void withProvider(Action<NamespaceProvider> action) {
+		action.execute(this.provider);
+	}
+
 	public List<MixinFile> getMixins() {
 		return this.mixins;
 	}
@@ -141,6 +151,20 @@ public abstract class ModJson<R extends ModDependencies.ModDependency, D extends
 
 	public void withInjectedInterfaces(Action<InjectedInterfaces> action) {
 		action.execute(this.injectedInterfaces);
+	}
+
+	public ParentSchema getParent() {
+		return this.parent;
+	}
+
+	public void withParent(String namespace) {
+		this.parent = new ParentSchema(namespace);
+	}
+
+	public void withParent(String namespace, Action<ParentSchema> action) {
+		ParentSchema parent = new ParentSchema(namespace);
+		action.execute(parent);
+		this.parent = parent;
 	}
 
 	public CustomElement.CustomBlock getCustom() {

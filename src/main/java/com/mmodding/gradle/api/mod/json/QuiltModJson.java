@@ -106,9 +106,9 @@ public class QuiltModJson extends ModJson<QuiltModDependencies.QuiltModDependenc
 		{
 			writer.name("quilt_loader")
 				.beginObject()
-				.name("group").value(Objects.requireNonNull(this.group, "Missing group in manifest declaration."))
-				.name("id").value(Objects.requireNonNull(this.namespace, "Missing namespace/mod ID in manifest declaration."))
-				.name("version").value(Objects.requireNonNull(this.version, "Missing version in manifest declaration."));
+				.name("group").value(Objects.requireNonNull(this.group, "Missing group in mod json declaration."))
+				.name("id").value(Objects.requireNonNull(this.namespace, "Missing namespace/mod ID in mod json declaration."))
+				.name("version").value(Objects.requireNonNull(this.version, "Missing version in mod json declaration."));
 
 			if(this.name != null && this.description != null && this.contact.notEmpty()) {
 				writer.name("metadata")
@@ -141,6 +141,11 @@ public class QuiltModJson extends ModJson<QuiltModDependencies.QuiltModDependenc
 				this.dependencies.writeJson(writer);
 			}
 
+			if (!this.provider.isEmpty()) {
+				writer.name("provides");
+				this.provider.writeJson(writer);
+			}
+
 			writer.endObject();
 		}
 
@@ -154,7 +159,7 @@ public class QuiltModJson extends ModJson<QuiltModDependencies.QuiltModDependenc
 
 		{
 			writer.name("minecraft").beginObject()
-				.name("environment").value(this.environment.getManifestName())
+				.name("environment").value(this.environment.getQualifier())
 				.endObject();
 		}
 
@@ -187,7 +192,11 @@ public class QuiltModJson extends ModJson<QuiltModDependencies.QuiltModDependenc
 		}
 
 		if (!this.injectedInterfaces.isEmpty()) {
-			this.injectedInterfaces.fill(this.custom, false);
+			this.injectedInterfaces.fill(this.custom, true);
+		}
+
+		if (!this.parent.isEmpty()) {
+			this.parent.fill(this.custom);
 		}
 
 		if (!this.custom.isEmpty()) {

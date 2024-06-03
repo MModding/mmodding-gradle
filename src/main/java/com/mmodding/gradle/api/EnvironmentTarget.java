@@ -5,13 +5,13 @@ public enum EnvironmentTarget {
 	CLIENT("client"),
 	DEDICATED_SERVER("server");
 
-	private final String manifestName;
+	private final String qualifier;
 
-	EnvironmentTarget(String manifestName) {
-		this.manifestName = manifestName;
+	EnvironmentTarget(String qualifier) {
+		this.qualifier = qualifier;
 	}
 
-	public String getManifestName() {
-		return this.manifestName;
+	public String getQualifier() {
+		return this.qualifier;
 	}
 }

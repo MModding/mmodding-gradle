@@ -73,7 +73,7 @@ public class MModdingGradle {
 
 		action.execute(modJson);
 
-		this.nestedJarsProcessor.addManifest(
+		this.nestedJarsProcessor.addModJson(
 			new NestedJarsProcessor.Metadata(dependency.getGroup(), dependency.getName(), dependency.getVersion()),
 			modJson
 		);

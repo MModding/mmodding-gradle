@@ -40,7 +40,7 @@ public class MixinFile implements Serializable {
 		if (this.environment != EnvironmentTarget.ANY) {
 			writer.beginObject();
 			writer.name("config").value(this.file);
-			writer.name("environment").value(this.environment.getManifestName());
+			writer.name("environment").value(this.environment.getQualifier());
 			writer.endObject();
 		} else {
 			writer.value(this.file);

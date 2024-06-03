@@ -37,11 +37,11 @@ public abstract class ModDependencies<D extends ModDependencies.ModDependency> i
 		this.minecraftVersion = minecraftVersion;
 	}
 
-	public String getMModdingLibraryVersion() {
+	public String getMmoddingLibraryVersion() {
 		return this.mmoddingLibraryVersion;
 	}
 
-	public void setMModdingLibraryVersion(String mmoddingLibraryVersion) {
+	public void setMmoddingLibraryVersion(String mmoddingLibraryVersion) {
 		this.mmoddingLibraryVersion = mmoddingLibraryVersion;
 	}
 
