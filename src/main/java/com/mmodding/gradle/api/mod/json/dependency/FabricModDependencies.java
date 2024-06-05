@@ -50,6 +50,9 @@ public class FabricModDependencies extends ModDependencies<FabricModDependencies
 		if (this.fabricApiVersion != null) {
 			new FabricModDependencies.FabricModDependency("fabric-api", this.fabricApiVersion).writeJson(writer);
 		}
+		if (this.mmoddingLibraryVersion != null) {
+			new FabricModDependencies.FabricModDependency("mmodding_library", this.mmoddingLibraryVersion).writeJson(writer);
+		}
 		for (FabricModDependency dependency : this.otherDependencies) {
 			dependency.writeJson(writer);
 		}
