@@ -39,16 +39,19 @@ public class FabricModDependencies extends ModDependencies<FabricModDependencies
 	public void writeJson(JsonWriter writer) throws IOException {
 		writer.beginObject();
 		if (this.javaVersion != null) {
-			new FabricModDependencies.FabricModDependency("java", this.javaVersion).writeJson(writer);
+			new FabricModDependency("java", this.javaVersion).writeJson(writer);
 		}
 		if (this.minecraftVersion != null) {
-			new FabricModDependencies.FabricModDependency("minecraft", this.minecraftVersion).writeJson(writer);
+			new FabricModDependency("minecraft", this.minecraftVersion).writeJson(writer);
 		}
 		if (this.fabricLoaderVersion != null) {
-			new FabricModDependencies.FabricModDependency("fabricloader", this.fabricLoaderVersion).writeJson(writer);
+			new FabricModDependency("fabricloader", this.fabricLoaderVersion).writeJson(writer);
 		}
 		if (this.fabricApiVersion != null) {
-			new FabricModDependencies.FabricModDependency("fabric-api", this.fabricApiVersion).writeJson(writer);
+			new FabricModDependency("fabric-api", this.fabricApiVersion).writeJson(writer);
+		}
+		if (this.mmoddingLibraryVersion != null) {
+			new FabricModDependency("mmodding", this.mmoddingLibraryVersion).writeJson(writer);
 		}
 		for (FabricModDependency dependency : this.otherDependencies) {
 			dependency.writeJson(writer);

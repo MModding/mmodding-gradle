@@ -50,6 +50,9 @@ public class QuiltModDependencies extends ModDependencies<QuiltModDependencies.Q
 		if (this.quiltedFabricApiVersion != null) {
 			new QuiltModDependency("quilted_fabric_api", this.quiltedFabricApiVersion).writeJson(writer);
 		}
+		if (this.mmoddingLibraryVersion != null) {
+			new QuiltModDependency("mmodding", this.mmoddingLibraryVersion).writeJson(writer);
+		}
 		for (QuiltModDependency dependency : this.otherDependencies) {
 			dependency.writeJson(writer);
 		}
