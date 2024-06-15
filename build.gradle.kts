@@ -1,6 +1,7 @@
 plugins {
 	id("com.gradle.plugin-publish").version("1.2.0")
 	id("maven-publish")
+	id("groovy")
 }
 
 group = "com.mmodding"
@@ -19,8 +20,11 @@ repositories {
 	}
 }
 
-// Add a source set for the functional test suite.
-val functionalTest: SourceSet by sourceSets.creating
+sourceSets {
+	test {
+		groovy.srcDirs("src/test/groovy")
+	}
+}
 
 dependencies {
 	compileOnly(libs.jetbrains.annotations)
@@ -30,8 +34,8 @@ dependencies {
 	implementation(libs.quilt.parsers.json)
 
 	// Use JUnit Jupiter for testing.
-	testImplementation(libs.junit.jupiter)
-	testRuntimeOnly(libs.junit.launcher)
+	testImplementation(libs.spock)
+	testRuntimeOnly(libs.junit)
 }
 
 gradlePlugin {
@@ -49,7 +53,7 @@ gradlePlugin {
 		}
 	}
 
-	testSourceSets(functionalTest)
+	testSourceSets(sourceSets.test.get())
 }
 
 java {
@@ -83,26 +87,12 @@ tasks.jar {
 	}
 }
 
-configurations["functionalTestImplementation"].extendsFrom(configurations.testImplementation.get())
-
-val functionalTestTask = tasks.register<Test>("functionalTest") {
-	group = "verification"
-	testClassesDirs = functionalTest.output.classesDirs
-	classpath = functionalTest.runtimeClasspath
+tasks.withType<Test>().configureEach {
+	useJUnitPlatform()
 }
 
 tasks.check {
-	// Run the functional tests as part of `check`.
-	dependsOn(functionalTestTask)
-}
-
-tasks.withType<Test>().configureEach {
-	// Using JUnitPlatform for running tests
-	useJUnitPlatform()
-
-	testLogging {
-		events("passed")
-	}
+	dependsOn(tasks.test)
 }
 
 publishing {
