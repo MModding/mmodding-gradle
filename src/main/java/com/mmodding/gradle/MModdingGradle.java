@@ -8,6 +8,7 @@
 
 package com.mmodding.gradle;
 
+import com.mmodding.gradle.api.architecture.Modules;
 import com.mmodding.gradle.api.mod.json.FabricModJson;
 import com.mmodding.gradle.impl.NestedJarsProcessor;
 import com.mmodding.gradle.task.GenerateFabricModJson;
@@ -79,5 +80,12 @@ public class MModdingGradle {
 		);
 
 		return dependency;
+	}
+
+	public Project modules(Project current, Action<Modules> action) {
+		Modules modules = new Modules(false);
+		action.execute(modules);
+		modules.apply(current.getDependencies());
+		return current;
 	}
 }
