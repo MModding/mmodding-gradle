@@ -1,7 +1,9 @@
 package com.mmodding.gradle.task;
 
 import com.mmodding.gradle.api.mod.json.ModJson;
-import com.mmodding.gradle.api.mod.json.dependency.ModDependencies;
+import com.mmodding.gradle.api.mod.json.dependency.ModDependency;
+import com.mmodding.gradle.api.mod.json.dependency.advanced.AdvancedDependencies;
+import com.mmodding.gradle.api.mod.json.dependency.simple.SimpleDependencies;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.file.DirectoryProperty;
 import org.gradle.api.provider.Property;
@@ -14,7 +16,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-public abstract class GenerateModJson<R extends ModDependencies.ModDependency, D extends ModDependencies<R>, M extends ModJson<R, D>> extends DefaultTask {
+public abstract class GenerateModJson<D extends ModDependency, A extends AdvancedDependencies<D>, S extends SimpleDependencies<D>, M extends ModJson<D, A, S>> extends DefaultTask {
 
 	@Input
 	public abstract Property<M> getModJson();

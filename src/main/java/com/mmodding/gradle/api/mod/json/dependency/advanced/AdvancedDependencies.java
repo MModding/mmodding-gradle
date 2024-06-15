@@ -1,5 +1,6 @@
-package com.mmodding.gradle.api.mod.json.dependency;
+package com.mmodding.gradle.api.mod.json.dependency.advanced;
 
+import com.mmodding.gradle.api.mod.json.dependency.ModDependency;
 import org.quiltmc.parsers.json.JsonWriter;
 
 import java.io.IOException;
@@ -7,7 +8,7 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
-public abstract class ModDependencies<D extends ModDependencies.ModDependency> implements Serializable {
+public abstract class AdvancedDependencies<D extends ModDependency> implements Serializable {
 
 	protected String javaVersion = null;
 	protected String minecraftVersion = null;
@@ -52,17 +53,4 @@ public abstract class ModDependencies<D extends ModDependencies.ModDependency> i
 	public abstract void addDependency(String namespace, String version);
 
 	public abstract void writeJson(JsonWriter writer) throws IOException;
-
-	public abstract static class ModDependency implements Serializable {
-
-		protected final String namespace;
-		protected final String version;
-
-		public ModDependency(String namespace, String version) {
-			this.namespace = namespace;
-			this.version = version;
-		}
-
-		public abstract void writeJson(JsonWriter writer) throws IOException;
-	}
 }

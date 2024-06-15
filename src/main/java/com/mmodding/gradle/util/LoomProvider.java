@@ -4,6 +4,7 @@ import net.fabricmc.loom.api.LoomGradleExtensionAPI;
 import org.gradle.api.Project;
 
 public class LoomProvider {
+
 	private final Project project;
 	private LoomGradleExtensionAPI loomExt;
 

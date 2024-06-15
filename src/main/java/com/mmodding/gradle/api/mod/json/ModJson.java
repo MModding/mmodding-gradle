@@ -1,7 +1,9 @@
 package com.mmodding.gradle.api.mod.json;
 
 import com.mmodding.gradle.api.EnvironmentTarget;
-import com.mmodding.gradle.api.mod.json.dependency.ModDependencies;
+import com.mmodding.gradle.api.mod.json.dependency.ModDependency;
+import com.mmodding.gradle.api.mod.json.dependency.advanced.AdvancedDependencies;
+import com.mmodding.gradle.api.mod.json.dependency.simple.SimpleDependencies;
 import groovy.transform.Internal;
 import org.gradle.api.Action;
 import org.gradle.api.Project;
@@ -14,7 +16,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class ModJson<R extends ModDependencies.ModDependency, D extends ModDependencies<R>> implements Serializable {
+public abstract class ModJson<D extends ModDependency, A extends AdvancedDependencies<D>, S extends SimpleDependencies<D>> implements Serializable {
 
 	protected String namespace;
 	protected String name;
@@ -113,9 +115,25 @@ public abstract class ModJson<R extends ModDependencies.ModDependency, D extends
 		action.execute(this.entrypoints);
 	}
 
-	public abstract D getDependencies();
+	public abstract A getDependencies();
 
-	public abstract void withDependencies(Action<D> action);
+	public abstract void withDependencies(Action<A> action);
+
+	public abstract S getRecommendations();
+
+	public abstract void withRecommendations(Action<S> action);
+
+	public abstract S getSuggestions();
+
+	public abstract void withSuggestions(Action<S> action);
+
+	public abstract S getConflicts();
+
+	public abstract void withConflicts(Action<S> action);
+
+	public abstract S getBreakages();
+
+	public abstract void withBreakages(Action<S> action);
 
 	public NamespaceProvider getProvider() {
 		return this.provider;

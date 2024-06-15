@@ -1,7 +1,9 @@
 package com.mmodding.gradle.api.mod.json;
 
 import com.mmodding.gradle.api.EnvironmentTarget;
-import com.mmodding.gradle.api.mod.json.dependency.FabricModDependencies;
+import com.mmodding.gradle.api.mod.json.dependency.FabricModDependency;
+import com.mmodding.gradle.api.mod.json.dependency.advanced.FabricAdvancedDependencies;
+import com.mmodding.gradle.api.mod.json.dependency.simple.FabricSimpleDependencies;
 import org.gradle.api.Action;
 import org.jetbrains.annotations.NotNull;
 
@@ -14,11 +16,15 @@ import java.util.Objects;
 
 import org.quiltmc.parsers.json.JsonWriter;
 
-public class FabricModJson extends ModJson<FabricModDependencies.FabricModDependency, FabricModDependencies> implements Serializable {
+public class FabricModJson extends ModJson<FabricModDependency, FabricAdvancedDependencies, FabricSimpleDependencies> implements Serializable {
 
 	private final List<Person> authors = new ArrayList<>();
 	private final List<Person> contributors = new ArrayList<>();
-	private final FabricModDependencies dependencies = new FabricModDependencies();
+	private final FabricAdvancedDependencies dependencies = new FabricAdvancedDependencies();
+	private final FabricSimpleDependencies recommendations = new FabricSimpleDependencies();
+	private final FabricSimpleDependencies suggestions = new FabricSimpleDependencies();
+	private final FabricSimpleDependencies conflicts = new FabricSimpleDependencies();
+	private final FabricSimpleDependencies breakages = new FabricSimpleDependencies();
 
 	@Override
 	public @NotNull String getFileName() {
@@ -54,13 +60,53 @@ public class FabricModJson extends ModJson<FabricModDependencies.FabricModDepend
 	}
 
 	@Override
-	public FabricModDependencies getDependencies() {
+	public FabricAdvancedDependencies getDependencies() {
 		return this.dependencies;
 	}
 
 	@Override
-	public void withDependencies(Action<FabricModDependencies> action) {
+	public void withDependencies(Action<FabricAdvancedDependencies> action) {
 		action.execute(this.dependencies);
+	}
+
+	@Override
+	public FabricSimpleDependencies getRecommendations() {
+		return this.recommendations;
+	}
+
+	@Override
+	public void withRecommendations(Action<FabricSimpleDependencies> action) {
+		action.execute(this.recommendations);
+	}
+
+	@Override
+	public FabricSimpleDependencies getSuggestions() {
+		return this.suggestions;
+	}
+
+	@Override
+	public void withSuggestions(Action<FabricSimpleDependencies> action) {
+		action.execute(this.suggestions);
+	}
+
+	@Override
+	public FabricSimpleDependencies getConflicts() {
+		return this.conflicts;
+	}
+
+	@Override
+	public void withConflicts(Action<FabricSimpleDependencies> action) {
+		action.execute(this.conflicts);
+	}
+
+	@Override
+	public FabricSimpleDependencies getBreakages() {
+		return this.breakages;
+	}
+
+	@Override
+	public void withBreakages(Action<FabricSimpleDependencies> action) {
+		action.execute(this.breakages);
 	}
 
 	@Override
@@ -119,6 +165,26 @@ public class FabricModJson extends ModJson<FabricModDependencies.FabricModDepend
 		if (!this.dependencies.isEmpty()) {
 			writer.name("depends");
 			this.dependencies.writeJson(writer);
+		}
+
+		if (!this.recommendations.isEmpty()) {
+			writer.name("recommends");
+			this.recommendations.writeJson(writer);
+		}
+
+		if (!this.suggestions.isEmpty()) {
+			writer.name("suggests");
+			this.suggestions.writeJson(writer);
+		}
+
+		if (!this.conflicts.isEmpty()) {
+			writer.name("conflicts");
+			this.conflicts.writeJson(writer);
+		}
+
+		if (!this.breakages.isEmpty()) {
+			writer.name("breaks");
+			this.breakages.writeJson(writer);
 		}
 
 		if (!this.provider.isEmpty()) {

@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 @ApiStatus.Internal
 public class NestedJarsProcessor {
 
-	private final Map<Metadata, Set<ModJson<?, ?>>> toProcess = new HashMap<>();
+	private final Map<Metadata, Set<ModJson<?, ?, ?>>> toProcess = new HashMap<>();
 	private final Project project;
 	private boolean injected = false;
 
@@ -43,7 +43,7 @@ public class NestedJarsProcessor {
 	 * @param metadata the dependency identifier
 	 * @param modJson the mod json to inject
 	 */
-	public void addModJson(@NotNull Metadata metadata, @NotNull ModJson<?, ?> modJson) {
+	public void addModJson(@NotNull Metadata metadata, @NotNull ModJson<?, ?, ?> modJson) {
 		var set = this.toProcess.computeIfAbsent(metadata, md -> new HashSet<>());
 
 		for (var oModJson : set) {

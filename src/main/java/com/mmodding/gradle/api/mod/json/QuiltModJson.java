@@ -1,6 +1,8 @@
 package com.mmodding.gradle.api.mod.json;
 
-import com.mmodding.gradle.api.mod.json.dependency.QuiltModDependencies;
+import com.mmodding.gradle.api.mod.json.dependency.QuiltModDependency;
+import com.mmodding.gradle.api.mod.json.dependency.advanced.QuiltAdvancedDependencies;
+import com.mmodding.gradle.api.mod.json.dependency.simple.QuiltSimpleDependencies;
 import org.gradle.api.Action;
 import org.gradle.api.Project;
 import org.jetbrains.annotations.NotNull;
@@ -14,7 +16,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
-public class QuiltModJson extends ModJson<QuiltModDependencies.QuiltModDependency, QuiltModDependencies> implements Serializable {
+public class QuiltModJson extends ModJson<QuiltModDependency, QuiltAdvancedDependencies, QuiltSimpleDependencies> implements Serializable {
 
 	private static final Set<String> OFFICIAL_KEYS = Set.of(
 		"schema_version",
@@ -26,7 +28,11 @@ public class QuiltModJson extends ModJson<QuiltModDependencies.QuiltModDependenc
 
 	private final List<Person> authors = new ArrayList<>();
 	private final List<Person> contributors = new ArrayList<>();
-	private final QuiltModDependencies dependencies = new QuiltModDependencies();
+	private final QuiltAdvancedDependencies dependencies = new QuiltAdvancedDependencies();
+	private final QuiltSimpleDependencies recommendations = new QuiltSimpleDependencies();
+	private final QuiltSimpleDependencies suggestions = new QuiltSimpleDependencies();
+	private final QuiltSimpleDependencies conflicts = new QuiltSimpleDependencies();
+	private final QuiltSimpleDependencies breakages = new QuiltSimpleDependencies();
 
 	private String group;
 	private String intermediateMappings = "net.fabricmc:intermediary";
@@ -87,13 +93,53 @@ public class QuiltModJson extends ModJson<QuiltModDependencies.QuiltModDependenc
 	}
 
 	@Override
-	public QuiltModDependencies getDependencies() {
+	public QuiltAdvancedDependencies getDependencies() {
 		return this.dependencies;
 	}
 
 	@Override
-	public void withDependencies(Action<QuiltModDependencies> action) {
+	public void withDependencies(Action<QuiltAdvancedDependencies> action) {
 		action.execute(this.dependencies);
+	}
+
+	@Override
+	public QuiltSimpleDependencies getRecommendations() {
+		return this.recommendations;
+	}
+
+	@Override
+	public void withRecommendations(Action<QuiltSimpleDependencies> action) {
+		action.execute(this.recommendations);
+	}
+
+	@Override
+	public QuiltSimpleDependencies getSuggestions() {
+		return this.suggestions;
+	}
+
+	@Override
+	public void withSuggestions(Action<QuiltSimpleDependencies> action) {
+		action.execute(this.suggestions);
+	}
+
+	@Override
+	public QuiltSimpleDependencies getConflicts() {
+		return this.conflicts;
+	}
+
+	@Override
+	public void withConflicts(Action<QuiltSimpleDependencies> action) {
+		action.execute(this.conflicts);
+	}
+
+	@Override
+	public QuiltSimpleDependencies getBreakages() {
+		return this.breakages;
+	}
+
+	@Override
+	public void withBreakages(Action<QuiltSimpleDependencies> action) {
+		action.execute(this.breakages);
 	}
 
 	@Override
@@ -139,6 +185,26 @@ public class QuiltModJson extends ModJson<QuiltModDependencies.QuiltModDependenc
 			if (!this.dependencies.isEmpty()) {
 				writer.name("depends");
 				this.dependencies.writeJson(writer);
+			}
+
+			if (!this.recommendations.isEmpty()) {
+				writer.name("recommends");
+				this.recommendations.writeJson(writer);
+			}
+
+			if (!this.suggestions.isEmpty()) {
+				writer.name("suggests");
+				this.recommendations.writeJson(writer);
+			}
+
+			if (!this.conflicts.isEmpty()) {
+				writer.name("conflicts");
+				this.conflicts.writeJson(writer);
+			}
+
+			if (!this.breakages.isEmpty()) {
+				writer.name("breaks");
+				this.breakages.writeJson(writer);
 			}
 
 			if (!this.provider.isEmpty()) {

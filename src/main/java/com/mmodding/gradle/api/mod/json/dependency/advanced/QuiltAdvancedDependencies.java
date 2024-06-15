@@ -1,10 +1,11 @@
-package com.mmodding.gradle.api.mod.json.dependency;
+package com.mmodding.gradle.api.mod.json.dependency.advanced;
 
+import com.mmodding.gradle.api.mod.json.dependency.QuiltModDependency;
 import org.quiltmc.parsers.json.JsonWriter;
 
 import java.io.IOException;
 
-public class QuiltModDependencies extends ModDependencies<QuiltModDependencies.QuiltModDependency> {
+public class QuiltAdvancedDependencies extends AdvancedDependencies<QuiltModDependency> {
 
 	private String quiltLoaderVersion = null;
 	private String quiltedFabricApiVersion = null;
@@ -57,20 +58,5 @@ public class QuiltModDependencies extends ModDependencies<QuiltModDependencies.Q
 			dependency.writeJson(writer);
 		}
 		writer.endArray();
-	}
-
-	public static class QuiltModDependency extends ModDependency {
-
-		public QuiltModDependency(String namespace, String version) {
-			super(namespace, version);
-		}
-
-		@Override
-		public void writeJson(JsonWriter writer) throws IOException {
-			writer.beginObject();
-			writer.name("id").value(this.namespace);
-			writer.name("versions").value(this.version);
-			writer.endObject();
-		}
 	}
 }

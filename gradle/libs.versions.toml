@@ -8,8 +8,8 @@ loom = "1.6.+"
 quilt_parsers = "0.3.0"
 
 # Testing
-junit_jupiter = "5.10.0"
-junit_launcher = "1.10.0"
+spock = "2.2-groovy-3.0"
+junit = "1.10.0"
 
 [libraries]
 jetbrains_annotations = { module = "org.jetbrains:annotations", version.ref = "jetbrains_annotations" }
@@ -22,5 +22,5 @@ loom_quilt = { module = "org.quiltmc:loom", version.ref = "loom" }
 quilt_parsers_json = { module = "org.quiltmc.parsers:json", version.ref = "quilt_parsers" }
 
 # Testing
-junit_jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit_jupiter" }
-junit_launcher = { module = "org.junit.platform:junit-platform-launcher", version.ref = "junit_launcher" }
+spock = { module = "org.spockframework:spock-core", version.ref = "spock" }
+junit = { module = "org.junit.platform:junit-platform-launcher", version.ref = "junit" }
