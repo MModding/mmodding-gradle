@@ -31,8 +31,8 @@ class FabricModJsonTest extends Specification {
 		buildFile = new File(this.testProjectDir, "build.gradle.kts")
 		buildFile << """
 			plugins {
-				id("fabric-loom").version("1.6-SNAPSHOT")
-				id("com.mmodding.gradle").version("0.0.6-alpha")
+				id("fabric-loom").version("1.7-SNAPSHOT")
+				id("com.mmodding.gradle").version("0.0.9-alpha")
 			}
 
 			version = "0.0.1-test"

@@ -10,12 +10,11 @@ package com.mmodding.gradle;
 
 import com.mmodding.gradle.api.architecture.Modules;
 import com.mmodding.gradle.api.mod.json.FabricModJson;
-import com.mmodding.gradle.impl.NestedJarsProcessor;
+import com.mmodding.gradle.impl.CustomFMJGenerationTask;
 import com.mmodding.gradle.task.GenerateFabricModJson;
 import com.mmodding.gradle.util.LoomProvider;
 import org.gradle.api.Action;
 import org.gradle.api.Project;
-import org.gradle.api.Task;
 import org.gradle.api.artifacts.Dependency;
 import org.gradle.api.model.ObjectFactory;
 import org.gradle.api.plugins.JavaPluginExtension;
@@ -32,17 +31,14 @@ public class MModdingGradle {
 
 	private final Project project;
 	private final LoomProvider loomProvider;
-	private final NestedJarsProcessor nestedJarsProcessor;
 
 	@Inject
 	public MModdingGradle(final ObjectFactory objects, final Project project) {
 		this.project = project;
 		this.loomProvider = new LoomProvider(project);
-		this.nestedJarsProcessor = new NestedJarsProcessor(project);
 	}
 
 	public void configureFabricModJson(Action<FabricModJson> action) {
-		Task check = this.project.getTasks().findByPath("generation/generateFmj");
 		if (this.project.getTasks().findByPath("generateFmj") == null) {
 			var fmj = new FabricModJson();
 			fmj.fillDefaults(this.project);
@@ -66,18 +62,15 @@ public class MModdingGradle {
 	}
 
 	public Dependency configureFMJForDependency(Dependency dependency, Action<FabricModJson> action) {
-		this.nestedJarsProcessor.injectIntoTask(this.project);
+		CustomFMJGenerationTask task = (CustomFMJGenerationTask) this.project.getTasks().findByPath("customFMJGeneration");
+		assert task != null;
 
 		FabricModJson modJson = new FabricModJson();
 		modJson.setName(dependency.getName());
 		modJson.setVersion(dependency.getVersion());
 
 		action.execute(modJson);
-
-		this.nestedJarsProcessor.addModJson(
-			new NestedJarsProcessor.Metadata(dependency.getGroup(), dependency.getName(), dependency.getVersion()),
-			modJson
-		);
+		task.addModJson(new CustomFMJGenerationTask.Metadata(dependency.getGroup(), dependency.getName(), dependency.getVersion()), modJson);
 
 		return dependency;
 	}

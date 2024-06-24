@@ -2,7 +2,7 @@
 jetbrains_annotations = "24.0.1"
 
 # Loom
-loom = "1.6.+"
+loom = "1.7.+"
 
 # Parsing
 quilt_parsers = "0.3.0"
