@@ -24,7 +24,7 @@ import java.util.Set;
  * </p>
  * @author FirstMegaGame4, LambdAurora for the original concept
  */
-public abstract class CustomFMJGenerationTask extends DefaultTask {
+public abstract class CustomModJsonGenerationTask extends DefaultTask {
 
 	private final Map<Metadata, Set<ModJson<?, ?, ?>>> toProcess = new HashMap<>();
 

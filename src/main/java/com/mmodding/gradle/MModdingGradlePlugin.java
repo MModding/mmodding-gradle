@@ -8,7 +8,7 @@
 
 package com.mmodding.gradle;
 
-import com.mmodding.gradle.impl.CustomFMJGenerationTask;
+import com.mmodding.gradle.impl.CustomModJsonGenerationTask;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 
@@ -31,7 +31,7 @@ public class MModdingGradlePlugin implements Plugin<Project> {
 		project.getExtensions().create("mmodding", MModdingGradle.class, project);
 		project.getTasks().register(
 			"customFMJGeneration",
-			CustomFMJGenerationTask.class,
+			CustomModJsonGenerationTask.class,
 			task -> {
 				task.mustRunAfter("processIncludeJars");
 				project.getTasks().getByName("remapJar").dependsOn(task);

@@ -10,9 +10,15 @@ package com.mmodding.gradle;
 
 import com.mmodding.gradle.api.architecture.Modules;
 import com.mmodding.gradle.api.mod.json.FabricModJson;
-import com.mmodding.gradle.impl.CustomFMJGenerationTask;
-import com.mmodding.gradle.task.GenerateFabricModJson;
+import com.mmodding.gradle.api.mod.json.ModJson;
+import com.mmodding.gradle.api.mod.json.QuiltModJson;
+import com.mmodding.gradle.api.mod.json.dependency.ModDependency;
+import com.mmodding.gradle.api.mod.json.dependency.advanced.AdvancedDependencies;
+import com.mmodding.gradle.api.mod.json.dependency.simple.SimpleDependencies;
+import com.mmodding.gradle.impl.CustomModJsonGenerationTask;
+import com.mmodding.gradle.task.GenerateModJson;
 import com.mmodding.gradle.util.LoomProvider;
+import com.mmodding.gradle.util.TaskType;
 import org.gradle.api.Action;
 import org.gradle.api.Project;
 import org.gradle.api.artifacts.Dependency;
@@ -38,14 +44,14 @@ public class MModdingGradle {
 		this.loomProvider = new LoomProvider(project);
 	}
 
-	public void configureFabricModJson(Action<FabricModJson> action) {
-		if (this.project.getTasks().findByPath("generateFmj") == null) {
-			var fmj = new FabricModJson();
-			fmj.fillDefaults(this.project);
-			action.execute(fmj);
+	private <D extends ModDependency, A extends AdvancedDependencies<D>, S extends SimpleDependencies<D>, M extends ModJson<D, A, S>> void configureModJson(TaskType<D, A, S, M> taskType, Action<M> action) {
+		if (this.project.getTasks().findByPath(taskType.getTaskName()) == null) {
+			M modJson = taskType.createModJson();
+			modJson.fillDefaults(this.project);
+			action.execute(modJson);
 
-			GenerateFabricModJson task = this.project.getTasks().create("generateFmj", GenerateFabricModJson.class);
-			task.getModJson().set(fmj);
+			GenerateModJson<D, A, S, M> task = this.project.getTasks().create(taskType.getTaskName(), taskType.getTaskClass());
+			task.getModJson().set(modJson);
 			this.project.getTasks().getByPath("ideaSyncTask").dependsOn(task);
 
 			JavaPluginExtension javaExtension = project.getExtensions().getByType(JavaPluginExtension.class);
@@ -54,25 +60,42 @@ public class MModdingGradle {
 		}
 		else {
 			// Behaving differently if the FabricModJson already exists
-			GenerateFabricModJson task = (GenerateFabricModJson) this.project.getTasks().getByName("generateFmj");
-			FabricModJson fmj = task.getModJson().get();
-			action.execute(fmj);
-			task.getModJson().set(fmj);
+			@SuppressWarnings("unchecked")
+			GenerateModJson<D, A, S, M> task = (GenerateModJson<D, A, S, M>) this.project.getTasks().getByName(taskType.getTaskName());
+			M modJson = task.getModJson().get();
+			action.execute(modJson);
+			task.getModJson().set(modJson);
 		}
 	}
 
-	public Dependency configureFMJForDependency(Dependency dependency, Action<FabricModJson> action) {
-		CustomFMJGenerationTask task = (CustomFMJGenerationTask) this.project.getTasks().findByPath("customFMJGeneration");
+	private <D extends ModDependency, A extends AdvancedDependencies<D>, S extends SimpleDependencies<D>, M extends ModJson<D, A, S>> Dependency configureModJsonForDependency(Dependency dependency, TaskType<D, A, S, M> taskType, Action<M> action) {
+		CustomModJsonGenerationTask task = (CustomModJsonGenerationTask) this.project.getTasks().findByPath(taskType.getDependencyName());
 		assert task != null;
 
-		FabricModJson modJson = new FabricModJson();
+		M modJson = taskType.createModJson();
 		modJson.setName(dependency.getName());
 		modJson.setVersion(dependency.getVersion());
 
 		action.execute(modJson);
-		task.addModJson(new CustomFMJGenerationTask.Metadata(dependency.getGroup(), dependency.getName(), dependency.getVersion()), modJson);
+		task.addModJson(new CustomModJsonGenerationTask.Metadata(dependency.getGroup(), dependency.getName(), dependency.getVersion()), modJson);
 
 		return dependency;
+	}
+
+	public void configureFabricModJson(Action<FabricModJson> action) {
+		this.configureModJson(TaskType.FMJ, action);
+	}
+
+	public void configureQuiltModJson(Action<QuiltModJson> action) {
+		this.configureModJson(TaskType.QMJ, action);
+	}
+
+	public Dependency configureFMJForDependency(Dependency dependency, Action<FabricModJson> action) {
+		return this.configureModJsonForDependency(dependency, TaskType.FMJ, action);
+	}
+
+	public Dependency configureQMJForDependency(Dependency dependency, Action<QuiltModJson> action) {
+		return this.configureModJsonForDependency(dependency, TaskType.QMJ, action);
 	}
 
 	public Project modules(Project current, Action<Modules> action) {
