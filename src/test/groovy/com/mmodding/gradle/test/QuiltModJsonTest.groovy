@@ -7,7 +7,7 @@ import spock.lang.TempDir
 import java.nio.file.Files
 import java.nio.file.Path;
 
-class FabricModJsonTest extends Specification {
+class QuiltModJsonTest extends Specification {
 
 	@TempDir
 	File testProjectDir
@@ -24,6 +24,10 @@ class FabricModJsonTest extends Specification {
 						name = "Fabric"
 						url = uri("https://maven.fabricmc.net/")
 					}
+					maven {
+						name = "Quilt"
+						url = uri("https://maven.quiltmc.org/repository/release")
+					}
 					gradlePluginPortal()
 				}
 			}
@@ -31,16 +35,17 @@ class FabricModJsonTest extends Specification {
 		buildFile = new File(this.testProjectDir, "build.gradle.kts")
 		buildFile << """
 			plugins {
-				id("fabric-loom").version("1.8-SNAPSHOT")
+				id("org.quiltmc.loom").version("1.8.+")
 				id("com.mmodding.gradle").version("0.0.10-alpha")
 			}
 
 			version = "0.0.1-test"
 
 			mmodding {
-				configureFabricModJson {
+				configureQuiltModJson {
 					name = "Test Mod"
 					namespace = "test_mod"
+					group = "com.mmodding.test"
 					description = "Test Description"
 					addAuthor("Test Author")
 					addContributor("Test Contributor")
@@ -52,8 +57,8 @@ class FabricModJsonTest extends Specification {
 					withDependencies {
 						javaVersion = ">=17"
 						minecraftVersion = "~1.20.4"
-						fabricLoaderVersion = ">=0.15.11-"
-						fabricApiVersion = "0.97.1+1.20.4"
+						quiltLoaderVersion = ">=0.25.0-"
+						quiltedFabricApiVersion = ">=1.0.0-"
 					}
 					withProvider {
 						provide("test-mod")
@@ -71,7 +76,7 @@ class FabricModJsonTest extends Specification {
 
 			dependencies {
 				minecraft("com.mojang:minecraft:1.20.4")
-				mappings("net.fabricmc:yarn:1.20.4+build.3:v2")
+				mappings("org.quiltmc:quilt-mappings:1.20.4+build.3:intermediary-v2")
 			}
 
 			java {
@@ -85,22 +90,22 @@ class FabricModJsonTest extends Specification {
 		GradleRunner.create()
 			.withProjectDir(testProjectDir)
 			.withPluginClasspath()
-			.withArguments("generateFmj")
+			.withArguments("generateQMJ")
 			.build()
 
 		then:
-		Path generatedFmjPath = testProjectDir.toPath().resolve("build/generated/generated_resources/fabric.mod.json")
-		if (Files.exists(generatedFmjPath)) {
-			String generatedFmj = Files.readString(generatedFmjPath);
-			if (generatedFmj != "") {
-				println(generatedFmj)
+		Path generatedQmjPath = testProjectDir.toPath().resolve("build/generated/generated_resources/quilt.mod.json")
+		if (Files.exists(generatedQmjPath)) {
+			String generatedQmj = Files.readString(generatedQmjPath);
+			if (generatedQmj != "") {
+				println(generatedQmj)
 			}
 			else {
-				throw new IllegalStateException("Generated FMJ is empty")
+				throw new IllegalStateException("Generated QMJ is empty")
 			}
 		}
 		else {
-			throw new IllegalStateException("Generated FMJ does not exist")
+			throw new IllegalStateException("Generated QMJ does not exist")
 		}
 	}
 }
