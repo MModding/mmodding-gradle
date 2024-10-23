@@ -114,7 +114,9 @@ public interface CustomElement extends Serializable {
 
 			if (value instanceof CustomArray array) {
 				action.execute(array);
-			} else {
+				this.put(name, array);
+			}
+			else {
 				throw new IllegalArgumentException("An element is already present at key \"" + name + "\" with value " + value + ".");
 			}
 		}
@@ -130,7 +132,9 @@ public interface CustomElement extends Serializable {
 
 			if (value instanceof CustomBlock block) {
 				action.execute(block);
-			} else {
+				this.put(name, block);
+			}
+			else {
 				throw new IllegalArgumentException("An element is already present at key \"" + name + "\" with value " + value + ".");
 			}
 		}

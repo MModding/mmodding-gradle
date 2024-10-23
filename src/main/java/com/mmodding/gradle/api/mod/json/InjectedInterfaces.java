@@ -33,7 +33,7 @@ public class InjectedInterfaces implements Serializable {
 	public void fill(CustomElement.CustomBlock custom, boolean isQuilt) {
 		Action<CustomElement.CustomBlock> process = block -> {
 			for (Map.Entry<String, Set<String>> entry : this.iifs.entrySet()) {
-				block.putArray(entry.getKey(), array -> {
+				block.withArray(entry.getKey(), array -> {
 					for (String iif : entry.getValue()) {
 						array.add(iif);
 					}
@@ -41,10 +41,10 @@ public class InjectedInterfaces implements Serializable {
 			}
 		};
 		if (isQuilt) {
-			custom.putBlock("quilt_loom", loom -> loom.putBlock("injected_interfaces", process));
+			custom.withBlock("quilt_loom", loom -> loom.withBlock("injected_interfaces", process));
 		}
 		else {
-			custom.putBlock("loom:injected_interfaces", process);
+			custom.withBlock("loom:injected_interfaces", process);
 		}
 	}
 }

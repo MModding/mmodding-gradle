@@ -63,8 +63,8 @@ public class ParentSchema implements Serializable {
 
 	public void fill(CustomElement.CustomBlock custom) {
 		if (this.name != null || this.description != null || this.icon != null || !this.badges.isEmpty()) {
-			custom.putBlock("modmenu", modmenu ->
-				modmenu.putBlock("parent", parent -> {
+			custom.withBlock("modmenu", modmenu ->
+				modmenu.withBlock("parent", parent -> {
 					parent.put("id", this.namespace);
 					if (this.name != null) {
 						parent.put("name", this.name);
@@ -76,13 +76,13 @@ public class ParentSchema implements Serializable {
 						parent.put("icon", this.icon);
 					}
 					if (!this.badges.isEmpty()) {
-						parent.putArray("badges", array -> this.badges.forEach(array::addUnique));
+						parent.withArray("badges", array -> this.badges.forEach(array::addUnique));
 					}
 				})
 			);
 		}
 		else {
-			custom.putBlock("modmenu", modmenu ->
+			custom.withBlock("modmenu", modmenu ->
 				modmenu.put("parent", this.namespace)
 			);
 		}
