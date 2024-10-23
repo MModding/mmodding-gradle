@@ -11,10 +11,7 @@ import org.quiltmc.parsers.json.JsonWriter;
 import java.io.IOException;
 import java.io.Serializable;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 public class QuiltModJson extends ModJson<QuiltModDependency, QuiltAdvancedDependencies, QuiltSimpleDependencies> implements Serializable {
 
@@ -26,8 +23,7 @@ public class QuiltModJson extends ModJson<QuiltModDependency, QuiltAdvancedDepen
 		"mixin"
 	);
 
-	private final List<Person> authors = new ArrayList<>();
-	private final List<Person> contributors = new ArrayList<>();
+	private final Map<String, String> contributors = new HashMap<>();
 	private final QuiltAdvancedDependencies dependencies = new QuiltAdvancedDependencies();
 	private final QuiltSimpleDependencies recommendations = new QuiltSimpleDependencies();
 	private final QuiltSimpleDependencies suggestions = new QuiltSimpleDependencies();
@@ -64,32 +60,12 @@ public class QuiltModJson extends ModJson<QuiltModDependency, QuiltAdvancedDepen
 		this.intermediateMappings = intermediateMappings;
 	}
 
-	public List<Person> getAuthors() {
-		return this.authors;
-	}
-
-	public void addAuthor(String name) {
-		this.authors.add(new Person(name));
-	}
-
-	public void addAuthor(String name, Action<Person> action) {
-		var person = new Person(name);
-		action.execute(person);
-		this.authors.add(person);
-	}
-
-	public List<Person> getContributors() {
+	public Map<String, String> getContributors() {
 		return this.contributors;
 	}
 
-	public void addContributor(String name) {
-		this.contributors.add(new Person(name));
-	}
-
-	public void addContributor(String name, Action<Person> action) {
-		var person = new Person(name);
-		action.execute(person);
-		this.contributors.add(person);
+	public void addContributor(String name, String role) {
+		this.contributors.put(name, role);
 	}
 
 	@Override
@@ -172,6 +148,18 @@ public class QuiltModJson extends ModJson<QuiltModDependency, QuiltAdvancedDepen
 					writer.name("icon").value(this.icon);
 				}
 
+				if (this.license != null) {
+					writer.name("license").value(this.license);
+				}
+
+				if (!this.contributors.isEmpty()) {
+					writer.name("contributors").beginObject();
+					for (Map.Entry<String, String> contributor : this.contributors.entrySet()) {
+						writer.name(contributor.getKey()).value(contributor.getValue());
+					}
+					writer.endObject();
+				}
+
 				this.contact.writeJsonIfHavingContent(writer);
 
 				writer.endObject();
@@ -219,30 +207,10 @@ public class QuiltModJson extends ModJson<QuiltModDependency, QuiltAdvancedDepen
 			writer.name("intermediate_mappings").value(this.intermediateMappings);
 		}
 
-		if (this.license != null) {
-			writer.name("license").value(this.license);
-		}
-
 		{
 			writer.name("minecraft").beginObject()
 				.name("environment").value(this.environment.getQualifier())
 				.endObject();
-		}
-
-		if (!this.authors.isEmpty()) {
-			writer.name("authors").beginArray();
-			for (Person author : this.authors) {
-				author.writeJson(writer);
-			}
-			writer.endArray();
-		}
-
-		if (!this.contributors.isEmpty()) {
-			writer.name("contributors").beginArray();
-			for (Person contributor : this.contributors) {
-				contributor.writeJson(writer);
-			}
-			writer.endArray();
 		}
 
 		if (this.accessWidener != null) {
@@ -250,11 +218,11 @@ public class QuiltModJson extends ModJson<QuiltModDependency, QuiltAdvancedDepen
 		}
 
 		if (!this.mixins.isEmpty()) {
-			writer.name("mixins").beginObject();
+			writer.name("mixins").beginArray();
 			for (MixinFile mixin : this.mixins) {
 				mixin.writeJson(writer);
 			}
-			writer.endObject();
+			writer.endArray();
 		}
 
 		if (!this.injectedInterfaces.isEmpty()) {
