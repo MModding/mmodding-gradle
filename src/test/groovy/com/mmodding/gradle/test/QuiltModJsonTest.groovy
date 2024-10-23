@@ -36,7 +36,7 @@ class QuiltModJsonTest extends Specification {
 		buildFile << """
 			plugins {
 				id("org.quiltmc.loom").version("1.8.+")
-				id("com.mmodding.gradle").version("0.0.12-alpha")
+				id("com.mmodding.gradle").version("0.0.13-alpha")
 			}
 
 			version = "0.0.1-test"
