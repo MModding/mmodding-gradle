@@ -18,15 +18,15 @@ public class InjectedInterfaces implements Serializable {
 	}
 
 	public void injectTo(String target, String iif) {
-		String patched = target.replace(".", "/").replace("$", "\\u0024");
+		String patched = target.replace(".", "/");
 		this.iifs.putIfAbsent(patched, new HashSet<>());
-		this.iifs.get(patched).add(iif.replace(".", "/").replace("$", "\\u0024"));
+		this.iifs.get(patched).add(iif.replace(".", "/"));
 	}
 
 	public void injectTo(String target, Set<String> iifs) {
 		this.iifs.put(
-			target.replace(".", "/").replace("$", "\\u0024"),
-			iifs.stream().map(iif -> iif.replace(".", "/").replace("$", "\\u0024")).collect(Collectors.toSet())
+			target.replace(".", "/"),
+			iifs.stream().map(iif -> iif.replace(".", "/")).collect(Collectors.toSet())
 		);
 	}
 
