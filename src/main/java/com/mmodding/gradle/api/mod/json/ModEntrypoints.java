@@ -11,7 +11,7 @@ public class ModEntrypoints implements Serializable {
 
 	private final boolean isQuilt;
 
-	private final Map<String, Set<String>> entrypoints = new HashMap<>();
+	private final Map<String, Set<String>> entrypoints = new LinkedHashMap<>();
 
 	public ModEntrypoints(boolean isQuilt) {
 		this.isQuilt = isQuilt;

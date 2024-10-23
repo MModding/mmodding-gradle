@@ -3,15 +3,12 @@ package com.mmodding.gradle.api.mod.json;
 import org.gradle.api.Action;
 
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class InjectedInterfaces implements Serializable {
 
-	private final Map<String, Set<String>> iifs = new HashMap<>();
+	private final Map<String, Set<String>> iifs = new LinkedHashMap<>();
 
 	public boolean isEmpty() {
 		return this.iifs.isEmpty();

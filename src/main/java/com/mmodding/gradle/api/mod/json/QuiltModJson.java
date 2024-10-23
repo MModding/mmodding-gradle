@@ -23,7 +23,7 @@ public class QuiltModJson extends ModJson<QuiltModDependency, QuiltAdvancedDepen
 		"mixin"
 	);
 
-	private final Map<String, String> contributors = new HashMap<>();
+	private final Map<String, String> contributors = new LinkedHashMap<>();
 	private final QuiltAdvancedDependencies dependencies = new QuiltAdvancedDependencies();
 	private final QuiltSimpleDependencies recommendations = new QuiltSimpleDependencies();
 	private final QuiltSimpleDependencies suggestions = new QuiltSimpleDependencies();
