@@ -165,6 +165,10 @@ public class QuiltModJson extends ModJson<QuiltModDependency, QuiltAdvancedDepen
 				writer.endObject();
 			}
 
+			if (this.intermediateMappings != null) {
+				writer.name("intermediate_mappings").value(this.intermediateMappings);
+			}
+
 			if (!this.entrypoints.isEmpty()) {
 				writer.name("entrypoints");
 				this.entrypoints.writeJson(writer);
@@ -203,10 +207,6 @@ public class QuiltModJson extends ModJson<QuiltModDependency, QuiltAdvancedDepen
 			writer.endObject();
 		}
 
-		if (this.intermediateMappings != null) {
-			writer.name("intermediate_mappings").value(this.intermediateMappings);
-		}
-
 		{
 			writer.name("minecraft").beginObject()
 				.name("environment").value(this.environment.getQualifier())
@@ -218,7 +218,7 @@ public class QuiltModJson extends ModJson<QuiltModDependency, QuiltAdvancedDepen
 		}
 
 		if (!this.mixins.isEmpty()) {
-			writer.name("mixins").beginArray();
+			writer.name("mixin").beginArray();
 			for (MixinFile mixin : this.mixins) {
 				mixin.writeJson(writer);
 			}
