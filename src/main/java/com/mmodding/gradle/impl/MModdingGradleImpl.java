@@ -25,8 +25,10 @@ import org.gradle.api.artifacts.Dependency;
 import org.gradle.api.model.ObjectFactory;
 import org.gradle.api.plugins.JavaPluginExtension;
 import org.gradle.api.tasks.SourceSet;
+import org.gradle.jvm.tasks.Jar;
 
 import javax.inject.Inject;
+import java.util.function.Predicate;
 
 public class MModdingGradleImpl implements MModdingGradle {
 
@@ -93,10 +95,78 @@ public class MModdingGradleImpl implements MModdingGradle {
 		return this.configureModJsonForDependency(dependency, TaskType.QMJ, action);
 	}
 
-	public Project modules(Project current, Action<Modules> action) {
+	@Override
+	public void configureTestmod() {
+		JavaPluginExtension javaExtension = this.project.getExtensions().getByType(JavaPluginExtension.class);
+		SourceSet testmodSourceSet = javaExtension.getSourceSets().getByName("testmod");
+		// Loom DSL Configuration
+		this.loomProvider.getLoom().getRuntimeOnlyLog4j().set(true);
+		this.loomProvider.getLoom().getRuns().register("testmodClient", settings -> {
+			settings.client();
+			settings.ideConfigGenerated(this.project.getRootProject() == this.project);
+			settings.name("Testmod Client");
+			settings.source(testmodSourceSet);
+		});
+		this.loomProvider.getLoom().getRuns().register("testmodServer", settings -> {
+			settings.server();
+			settings.ideConfigGenerated(this.project.getRootProject() == this.project);
+			settings.name("Testmod Server");
+			settings.source(testmodSourceSet);
+		});
+		// Task Configuration
+		this.project.getTasks().register("testmodJar", Jar.class).configure(task -> {
+			task.from(testmodSourceSet.getOutput());
+			task.getArchiveClassifier().set("testmod");
+		});
+		this.project.getDependencies().add("testmodImplementation", javaExtension.getSourceSets().getByName("main").getOutput());
+	}
+
+	@Override
+	public void loomModRegistration() {
+		this.loomModRegistration(current -> true);
+	}
+
+	@Override
+	public void loomModRegistration(Predicate<Project> filter) {
+		this.project.allprojects(current -> {
+			if (filter.test(current)) {
+				JavaPluginExtension ext = current.getExtensions().getByType(JavaPluginExtension.class);
+				this.loomProvider.getLoom().getMods().register(current.getName())
+					.configure(settings -> settings.sourceSet(ext.getSourceSets().getByName("main")));
+			}
+		});
+	}
+
+	@Override
+	public void loomTestmodRegistration() {
+		this.loomTestmodRegistration(current -> true);
+	}
+
+	@Override
+	public void loomTestmodRegistration(Predicate<Project> filter) {
+		this.project.allprojects(current -> {
+			if (filter.test(current)) {
+				JavaPluginExtension ext = current.getExtensions().getByType(JavaPluginExtension.class);
+				this.loomProvider.getLoom().getMods().register(current.getName() + "_testmod")
+					.configure(settings -> settings.sourceSet(ext.getSourceSets().getByName("testmod")));
+			}
+		});
+	}
+
+	public void modules(Action<Modules> action) {
 		Modules modules = new Modules(false);
 		action.execute(modules);
-		modules.apply(current.getDependencies());
-		return current;
+		modules.apply(this.project.getDependencies());
+	}
+
+	@Override
+	public void collectSubprojectClasspaths() {
+		JavaPluginExtension javaExtension = this.project.getExtensions().getByType(JavaPluginExtension.class);
+		SourceSet mainSourceSet = javaExtension.getSourceSets().getByName("main");
+		this.project.afterEvaluate(ignored -> this.project.subprojects(subproject -> {
+			SourceSet subProjectMainSourceSet = subproject.getExtensions().getByType(JavaPluginExtension.class).getSourceSets().getByName("main");
+			mainSourceSet.getCompileClasspath().plus(subProjectMainSourceSet.getCompileClasspath());
+			mainSourceSet.getRuntimeClasspath().plus(subProjectMainSourceSet.getRuntimeClasspath());
+		}));
 	}
 }

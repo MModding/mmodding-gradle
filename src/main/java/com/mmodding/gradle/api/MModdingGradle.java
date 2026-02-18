@@ -7,6 +7,8 @@ import org.gradle.api.Action;
 import org.gradle.api.Project;
 import org.gradle.api.artifacts.Dependency;
 
+import java.util.function.Predicate;
+
 /**
  * Represents MModding Gradle to configure parts of it in buildscripts.
  *
@@ -43,10 +45,46 @@ public interface MModdingGradle {
 	Dependency configureQMJForDependency(Dependency dependency, Action<QuiltModJson> action);
 
 	/**
-	 * Manages modules inside a multi-project.
-	 * @param current the current project to manage
-	 * @param action the modules management
-	 * @return the current project
+	 * Configures the Test Mod for the current module. Applies to the <code>testmod</code> source set.
 	 */
-	Project modules(Project current, Action<Modules> action);
+	void configureTestmod();
+
+	/**
+	 * Registers every project of the multi-project structure as a mod through the Loom DSL.
+	 * <br>
+	 * For single-project structures, this only registers the actual project.
+	 */
+	void loomModRegistration();
+
+	/**
+	 * Registers some projects of the multi-project structure as a mod through the Loom DSL.
+	 * @param filter the project filter
+	 */
+	void loomModRegistration(Predicate<Project> filter);
+
+	/**
+	 * Registers every project test mod of the multi-project structure as a test mod through the Loom DSL.
+	 * <br>
+	 * For single-project structures, this only registers the actual project.
+	 */
+	void loomTestmodRegistration();
+
+	/**
+	 * Registers some project test mods of the multi-project structure as a test mod through the Loom DSL.
+	 * @param filter the project filter
+	 */
+	void loomTestmodRegistration(Predicate<Project> filter);
+
+	/**
+	 * Manages modules inside a multi-project.
+	 * @param action the modules management
+	 */
+	void modules(Action<Modules> action);
+
+	/**
+	 * Collects and provides subproject main classpaths to the main project.
+	 * <br>
+	 * This notably lets the main project Loom to properly detect the presence of subproject generated mod jsons.
+	 */
+	void collectSubprojectClasspaths();
 }
