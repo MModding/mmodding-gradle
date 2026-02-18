@@ -99,8 +99,8 @@ public class MModdingGradleImpl implements MModdingGradle {
 	public void configureTestmod() {
 		JavaPluginExtension javaExtension = this.project.getExtensions().getByType(JavaPluginExtension.class);
 		SourceSet mainSourceSet = javaExtension.getSourceSets().getByName("main");
-		SourceSet testmodSourceSet = javaExtension.getSourceSets().create("testmod");
-		SourceSet testSourceSet = javaExtension.getSourceSets().create("test");
+		SourceSet testmodSourceSet = javaExtension.getSourceSets().maybeCreate("testmod");
+		SourceSet testSourceSet = javaExtension.getSourceSets().maybeCreate("test");
 		// SourceSets Setup
 		testmodSourceSet.getCompileClasspath().plus(mainSourceSet.getCompileClasspath());
 		testmodSourceSet.getRuntimeClasspath().plus(mainSourceSet.getRuntimeClasspath());
