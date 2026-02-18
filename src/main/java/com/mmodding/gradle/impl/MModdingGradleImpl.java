@@ -137,9 +137,11 @@ public class MModdingGradleImpl implements MModdingGradle {
 	public void loomModRegistration(Predicate<Project> filter) {
 		this.project.allprojects(current -> {
 			if (filter.test(current)) {
-				JavaPluginExtension ext = current.getExtensions().getByType(JavaPluginExtension.class);
-				this.loomProvider.getLoom().getMods().register(current.getName())
-					.configure(settings -> settings.sourceSet(ext.getSourceSets().getByName("main")));
+				JavaPluginExtension ext = current.getExtensions().findByType(JavaPluginExtension.class);
+				if (ext != null) {
+					this.loomProvider.getLoom().getMods().register(current.getName())
+						.configure(settings -> settings.sourceSet(ext.getSourceSets().getByName("main")));
+				}
 			}
 		});
 	}
@@ -153,9 +155,11 @@ public class MModdingGradleImpl implements MModdingGradle {
 	public void loomTestmodRegistration(Predicate<Project> filter) {
 		this.project.allprojects(current -> {
 			if (filter.test(current)) {
-				JavaPluginExtension ext = current.getExtensions().getByType(JavaPluginExtension.class);
-				this.loomProvider.getLoom().getMods().register(current.getName() + "_testmod")
-					.configure(settings -> settings.sourceSet(ext.getSourceSets().getByName("testmod")));
+				JavaPluginExtension ext = current.getExtensions().findByType(JavaPluginExtension.class);
+				if (ext != null) {
+					this.loomProvider.getLoom().getMods().register(current.getName() + "_testmod")
+						.configure(settings -> settings.sourceSet(ext.getSourceSets().getByName("testmod")));
+				}
 			}
 		});
 	}
