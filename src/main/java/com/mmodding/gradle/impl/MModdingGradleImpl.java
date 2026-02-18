@@ -102,10 +102,10 @@ public class MModdingGradleImpl implements MModdingGradle {
 		SourceSet testmodSourceSet = javaExtension.getSourceSets().maybeCreate("testmod");
 		SourceSet testSourceSet = javaExtension.getSourceSets().maybeCreate("test");
 		// SourceSets Setup
-		testmodSourceSet.getCompileClasspath().plus(mainSourceSet.getCompileClasspath());
-		testmodSourceSet.getRuntimeClasspath().plus(mainSourceSet.getRuntimeClasspath());
-		testSourceSet.getCompileClasspath().plus(testmodSourceSet.getCompileClasspath());
-		testSourceSet.getRuntimeClasspath().plus(testmodSourceSet.getRuntimeClasspath());
+		testmodSourceSet.setCompileClasspath(testmodSourceSet.getCompileClasspath().plus(mainSourceSet.getCompileClasspath()));
+		testmodSourceSet.setRuntimeClasspath(testmodSourceSet.getRuntimeClasspath().plus(mainSourceSet.getRuntimeClasspath()));
+		testSourceSet.setCompileClasspath(testSourceSet.getCompileClasspath().plus(testmodSourceSet.getCompileClasspath()));
+		testSourceSet.setRuntimeClasspath(testSourceSet.getRuntimeClasspath().plus(testmodSourceSet.getRuntimeClasspath()));
 		// Loom DSL Configuration
 		this.loomProvider.getLoom().getRuntimeOnlyLog4j().set(true);
 		this.loomProvider.getLoom().getRuns().register("testmodClient", settings -> {
@@ -172,8 +172,8 @@ public class MModdingGradleImpl implements MModdingGradle {
 		SourceSet mainSourceSet = javaExtension.getSourceSets().getByName("main");
 		this.project.afterEvaluate(ignored -> this.project.subprojects(subproject -> {
 			SourceSet subProjectMainSourceSet = subproject.getExtensions().getByType(JavaPluginExtension.class).getSourceSets().getByName("main");
-			mainSourceSet.getCompileClasspath().plus(subProjectMainSourceSet.getCompileClasspath());
-			mainSourceSet.getRuntimeClasspath().plus(subProjectMainSourceSet.getRuntimeClasspath());
+			mainSourceSet.setCompileClasspath(mainSourceSet.getCompileClasspath().plus(subProjectMainSourceSet.getCompileClasspath()));
+			mainSourceSet.setRuntimeClasspath(mainSourceSet.getRuntimeClasspath().plus(subProjectMainSourceSet.getRuntimeClasspath()));
 		}));
 	}
 }
