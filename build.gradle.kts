@@ -49,7 +49,7 @@ gradlePlugin {
 			displayName = "MModding Gradle"
 			description = "List of Gradle Tools to Help in Minecraft Mod Development"
 			tags = listOf("minecraft", "fabric-loom", "quilt-loom")
-			implementationClass = "com.mmodding.gradle.MModdingGradlePlugin"
+            implementationClass = "com.mmodding.gradle.impl.MModdingGradlePlugin"
 		}
 	}
 

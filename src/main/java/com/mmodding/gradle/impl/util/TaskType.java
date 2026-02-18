@@ -1,4 +1,4 @@
-package com.mmodding.gradle.util;
+package com.mmodding.gradle.impl.util;
 
 import com.mmodding.gradle.api.mod.json.FabricModJson;
 import com.mmodding.gradle.api.mod.json.ModJson;
@@ -12,9 +12,9 @@ import com.mmodding.gradle.api.mod.json.dependency.advanced.QuiltAdvancedDepende
 import com.mmodding.gradle.api.mod.json.dependency.simple.FabricSimpleDependencies;
 import com.mmodding.gradle.api.mod.json.dependency.simple.QuiltSimpleDependencies;
 import com.mmodding.gradle.api.mod.json.dependency.simple.SimpleDependencies;
-import com.mmodding.gradle.task.GenerateFabricModJson;
-import com.mmodding.gradle.task.GenerateModJson;
-import com.mmodding.gradle.task.GenerateQuiltModJson;
+import com.mmodding.gradle.impl.task.GenerateFabricModJson;
+import com.mmodding.gradle.impl.task.GenerateModJson;
+import com.mmodding.gradle.impl.task.GenerateQuiltModJson;
 
 import java.util.function.Supplier;
 

@@ -1,4 +1,4 @@
-package com.mmodding.gradle.task;
+package com.mmodding.gradle.impl.task;
 
 import com.mmodding.gradle.api.mod.json.ModJson;
 import com.mmodding.gradle.api.mod.json.dependency.ModDependency;

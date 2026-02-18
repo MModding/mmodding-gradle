@@ -1,4 +1,4 @@
-package com.mmodding.gradle.util;
+package com.mmodding.gradle.impl.util;
 
 import net.fabricmc.loom.api.LoomGradleExtensionAPI;
 import org.gradle.api.Project;

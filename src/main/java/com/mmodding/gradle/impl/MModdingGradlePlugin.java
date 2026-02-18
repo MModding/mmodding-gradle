@@ -6,14 +6,14 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-package com.mmodding.gradle;
+package com.mmodding.gradle.impl;
 
-import com.mmodding.gradle.impl.CustomModJsonGenerationTask;
+import com.mmodding.gradle.api.MModdingGradle;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 
 /**
- * Represents the Yumi Minecraft Weaving Loom Gradle plugin.
+ * Represents the MModding Gradle Plugin.
  *
  * @author FirstMegaGame4, LambdAurora for mod json base
  */
@@ -28,7 +28,7 @@ public class MModdingGradlePlugin implements Plugin<Project> {
 
 	@Override
 	public void apply(Project project) {
-		project.getExtensions().create("mmodding", MModdingGradle.class, project);
+		project.getExtensions().create(MModdingGradle.class, "mmodding", MModdingGradleImpl.class, project);
 		project.getTasks().register(
 			"customFMJGeneration",
 			CustomModJsonGenerationTask.class,

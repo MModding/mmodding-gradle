@@ -6,8 +6,9 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-package com.mmodding.gradle;
+package com.mmodding.gradle.impl;
 
+import com.mmodding.gradle.api.MModdingGradle;
 import com.mmodding.gradle.api.architecture.Modules;
 import com.mmodding.gradle.api.mod.json.FabricModJson;
 import com.mmodding.gradle.api.mod.json.ModJson;
@@ -15,10 +16,9 @@ import com.mmodding.gradle.api.mod.json.QuiltModJson;
 import com.mmodding.gradle.api.mod.json.dependency.ModDependency;
 import com.mmodding.gradle.api.mod.json.dependency.advanced.AdvancedDependencies;
 import com.mmodding.gradle.api.mod.json.dependency.simple.SimpleDependencies;
-import com.mmodding.gradle.impl.CustomModJsonGenerationTask;
-import com.mmodding.gradle.task.GenerateModJson;
-import com.mmodding.gradle.util.LoomProvider;
-import com.mmodding.gradle.util.TaskType;
+import com.mmodding.gradle.impl.task.GenerateModJson;
+import com.mmodding.gradle.impl.util.LoomProvider;
+import com.mmodding.gradle.impl.util.TaskType;
 import org.gradle.api.Action;
 import org.gradle.api.Project;
 import org.gradle.api.artifacts.Dependency;
@@ -28,18 +28,13 @@ import org.gradle.api.tasks.SourceSet;
 
 import javax.inject.Inject;
 
-/**
- * Represents MModding Gradle to configure parts of it in buildscripts.
- *
- * @author FirstMegaGame4, LambdAurora for mod json base
- */
-public class MModdingGradle {
+public class MModdingGradleImpl implements MModdingGradle {
 
 	private final Project project;
 	private final LoomProvider loomProvider;
 
 	@Inject
-	public MModdingGradle(final ObjectFactory objects, final Project project) {
+	public MModdingGradleImpl(final ObjectFactory objects, final Project project) {
 		this.project = project;
 		this.loomProvider = new LoomProvider(project);
 	}
@@ -54,7 +49,7 @@ public class MModdingGradle {
 			task.getModJson().set(modJson);
 			this.project.getTasks().getByPath("ideaSyncTask").dependsOn(task);
 
-			JavaPluginExtension javaExtension = project.getExtensions().getByType(JavaPluginExtension.class);
+			JavaPluginExtension javaExtension = this.project.getExtensions().getByType(JavaPluginExtension.class);
 			SourceSet mainSourceSet = javaExtension.getSourceSets().getByName("main");
 			mainSourceSet.getResources().srcDir(task);
 		}

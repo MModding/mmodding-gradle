@@ -5,7 +5,7 @@ jetbrains_annotations = "24.0.1"
 loom = "1.7.+"
 
 # Parsing
-quilt_parsers = "0.3.0"
+quilt_parsers = "0.3.1"
 
 # Testing
 spock = "2.2-groovy-3.0"

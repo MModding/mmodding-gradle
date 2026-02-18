@@ -85,7 +85,7 @@ public interface CustomElement extends Serializable {
 
 	class CustomBlock implements CustomElement {
 
-		private final Map<String, CustomElement> properties = new HashMap<>();
+		private final Map<String, CustomElement> properties = new LinkedHashMap<>();
 
 		public void put(String name, CustomElement element) {
 			this.properties.put(name, element);

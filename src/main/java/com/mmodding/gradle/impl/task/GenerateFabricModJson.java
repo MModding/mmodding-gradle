@@ -1,4 +1,4 @@
-package com.mmodding.gradle.task;
+package com.mmodding.gradle.impl.task;
 
 import com.mmodding.gradle.api.mod.json.FabricModJson;
 import com.mmodding.gradle.api.mod.json.dependency.FabricModDependency;
