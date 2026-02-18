@@ -25,10 +25,10 @@ public abstract class GenerateModJson<D extends ModDependency, A extends Advance
 	public abstract DirectoryProperty getOutputDir();
 
 	@Inject
-	public GenerateModJson() {
+	public GenerateModJson(boolean isTestmod) {
 		this.setGroup("generation");
 		this.getOutputDir().convention(
-			this.getProject().getLayout().getBuildDirectory().dir("generated/generated_resources")
+			this.getProject().getLayout().getBuildDirectory().dir("generated/generated_" + (isTestmod ? "testmod_" : "") + "resources")
 		);
 	}
 

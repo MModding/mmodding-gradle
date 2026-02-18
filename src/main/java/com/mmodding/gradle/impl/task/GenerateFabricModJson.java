@@ -7,7 +7,14 @@ import com.mmodding.gradle.api.mod.json.dependency.simple.FabricSimpleDependenci
 import org.gradle.api.provider.Property;
 import org.gradle.api.tasks.Input;
 
+import javax.inject.Inject;
+
 public abstract class GenerateFabricModJson extends GenerateModJson<FabricModDependency, FabricAdvancedDependencies, FabricSimpleDependencies, FabricModJson> {
+
+	@Inject
+	public GenerateFabricModJson(boolean isTestmod) {
+		super(isTestmod);
+	}
 
 	@Input
 	public abstract Property<FabricModJson> getModJson();

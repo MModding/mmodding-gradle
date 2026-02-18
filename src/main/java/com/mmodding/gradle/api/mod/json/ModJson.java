@@ -35,7 +35,7 @@ public abstract class ModJson<D extends ModDependency, A extends AdvancedDepende
 	protected final CustomElement.CustomBlock custom = new CustomElement.CustomBlock();
 
 	public void fillDefaults(Project project) {
-		this.name = project.getName();
+		this.namespace = project.getName().replace("-", "_"); // namespaces should be snake_case
 		this.version = project.getVersion().toString();
 	}
 

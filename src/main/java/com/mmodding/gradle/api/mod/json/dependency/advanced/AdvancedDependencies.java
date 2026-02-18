@@ -17,7 +17,7 @@ public abstract class AdvancedDependencies<D extends ModDependency> implements S
 	protected final Set<D> otherDependencies = new HashSet<>();
 
 	protected boolean isRootEmpty() {
-		return this.javaVersion == null && this.minecraftVersion == null && this.mmoddingLibraryVersion == null;
+		return this.javaVersion == null && this.minecraftVersion == null && this.mmoddingLibraryVersion == null && this.otherDependencies.isEmpty();
 	}
 
 	public abstract boolean isEmpty();

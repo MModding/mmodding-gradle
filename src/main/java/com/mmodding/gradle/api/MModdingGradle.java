@@ -3,6 +3,7 @@ package com.mmodding.gradle.api;
 import com.mmodding.gradle.api.architecture.Modules;
 import com.mmodding.gradle.api.mod.json.FabricModJson;
 import com.mmodding.gradle.api.mod.json.QuiltModJson;
+import com.mmodding.gradle.api.testmod.TestModJson;
 import org.gradle.api.Action;
 import org.gradle.api.Project;
 import org.gradle.api.artifacts.Dependency;
@@ -46,8 +47,9 @@ public interface MModdingGradle {
 
 	/**
 	 * Configures the Test Mod for the current module. Applies to the <code>testmod</code> source set.
+	 * @param action the Test Mod Json configuration
 	 */
-	void configureTestmod();
+	void configureTestmod(Action<TestModJson> action);
 
 	/**
 	 * Registers every project of the multi-project structure as a mod through the Loom DSL.
