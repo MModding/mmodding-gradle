@@ -98,7 +98,14 @@ public class MModdingGradleImpl implements MModdingGradle {
 	@Override
 	public void configureTestmod() {
 		JavaPluginExtension javaExtension = this.project.getExtensions().getByType(JavaPluginExtension.class);
-		SourceSet testmodSourceSet = javaExtension.getSourceSets().getByName("testmod");
+		SourceSet mainSourceSet = javaExtension.getSourceSets().getByName("main");
+		SourceSet testmodSourceSet = javaExtension.getSourceSets().create("testmod");
+		SourceSet testSourceSet = javaExtension.getSourceSets().create("test");
+		// SourceSets Setup
+		testmodSourceSet.getCompileClasspath().plus(mainSourceSet.getCompileClasspath());
+		testmodSourceSet.getRuntimeClasspath().plus(mainSourceSet.getRuntimeClasspath());
+		testSourceSet.getCompileClasspath().plus(testmodSourceSet.getCompileClasspath());
+		testSourceSet.getRuntimeClasspath().plus(testmodSourceSet.getRuntimeClasspath());
 		// Loom DSL Configuration
 		this.loomProvider.getLoom().getRuntimeOnlyLog4j().set(true);
 		this.loomProvider.getLoom().getRuns().register("testmodClient", settings -> {
@@ -118,7 +125,7 @@ public class MModdingGradleImpl implements MModdingGradle {
 			task.from(testmodSourceSet.getOutput());
 			task.getArchiveClassifier().set("testmod");
 		});
-		this.project.getDependencies().add("testmodImplementation", javaExtension.getSourceSets().getByName("main").getOutput());
+		this.project.getDependencies().add("testmodImplementation", mainSourceSet.getOutput());
 	}
 
 	@Override
