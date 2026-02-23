@@ -48,10 +48,10 @@ public class Modules {
 
 	public void apply(DependencyHandler handler) {
 		for (String module : this.apiModules) {
-			this.moduleProcessor.accept(handler, new Pair<>("api", module));
+			this.moduleProcessor.accept(handler, new Pair<>("modApi", module));
 		}
 		for (String module : this.implementationModules) {
-			this.moduleProcessor.accept(handler, new Pair<>("implementation", module));
+			this.moduleProcessor.accept(handler, new Pair<>("modImplementation", module));
 		}
 		if (this.includeContainer != null) {
 			if (!this.includeContainer.apiModules.isEmpty() || !this.includeContainer.implementationModules.isEmpty()) {
