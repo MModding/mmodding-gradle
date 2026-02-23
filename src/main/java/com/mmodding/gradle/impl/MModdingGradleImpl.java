@@ -185,19 +185,8 @@ public class MModdingGradleImpl implements MModdingGradle {
 	}
 
 	public void modules(Action<Modules> action) {
-		Modules modules = new Modules(false);
+		Modules modules = new Modules(this.project, false);
 		action.execute(modules);
 		modules.apply(this.project.getDependencies());
-	}
-
-	@Override
-	public void collectSubprojectClasspaths() {
-		JavaPluginExtension javaExtension = this.project.getExtensions().getByType(JavaPluginExtension.class);
-		SourceSet mainSourceSet = javaExtension.getSourceSets().getByName("main");
-		this.project.afterEvaluate(ignored -> this.project.subprojects(subproject -> {
-			SourceSet subProjectMainSourceSet = subproject.getExtensions().getByType(JavaPluginExtension.class).getSourceSets().getByName("main");
-			mainSourceSet.setCompileClasspath(mainSourceSet.getCompileClasspath().plus(subProjectMainSourceSet.getCompileClasspath()));
-			mainSourceSet.setRuntimeClasspath(mainSourceSet.getRuntimeClasspath().plus(subProjectMainSourceSet.getRuntimeClasspath()));
-		}));
 	}
 }

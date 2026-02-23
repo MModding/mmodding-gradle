@@ -82,11 +82,4 @@ public interface MModdingGradle {
 	 * @param action the modules management
 	 */
 	void modules(Action<Modules> action);
-
-	/**
-	 * Collects and provides subproject main classpaths to the main project.
-	 * <br>
-	 * This notably lets the main project Loom to properly detect the presence of subproject generated mod jsons.
-	 */
-	void collectSubprojectClasspaths();
 }

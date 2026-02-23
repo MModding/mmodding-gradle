@@ -2,7 +2,10 @@ package com.mmodding.gradle.api.architecture;
 
 import net.fabricmc.loom.util.Pair;
 import org.gradle.api.Action;
+import org.gradle.api.Project;
 import org.gradle.api.artifacts.dsl.DependencyHandler;
+import org.gradle.api.plugins.JavaPluginExtension;
+import org.gradle.api.tasks.SourceSet;
 
 import java.util.*;
 import java.util.function.BiConsumer;
@@ -14,8 +17,8 @@ public class Modules {
 	private final Modules includeContainer;
 	private final BiConsumer<DependencyHandler, Pair<String, String>> moduleProcessor;
 
-	public Modules(boolean includeMode) {
-		this.includeContainer = !includeMode ? new Modules(true) : null;
+	public Modules(Project project, boolean includeMode) {
+		this.includeContainer = !includeMode ? new Modules(project, true) : null;
 		this.moduleProcessor = (handler, module) -> {
 			Map<String, String> notation = new HashMap<>();
 			notation.put("path", ":" + module.right());
@@ -26,6 +29,14 @@ public class Modules {
 			else {
 				handler.add(module.left(), handler.project(notation));
 			}
+			SourceSet mainSourceSet = Objects.requireNonNull(project.getExtensions().findByType(JavaPluginExtension.class)).getSourceSets().getByName("main");
+			Project dependencyProject = project.getRootProject().findProject(":" + module.right());
+			if (dependencyProject == null) {
+				throw new IllegalStateException("Dependency project should exist.");
+			}
+			SourceSet dependencyMainSourceSet = Objects.requireNonNull(dependencyProject.getExtensions().findByType(JavaPluginExtension.class)).getSourceSets().getByName("main");
+			mainSourceSet.setCompileClasspath(mainSourceSet.getCompileClasspath().plus(dependencyMainSourceSet.getCompileClasspath()));
+			mainSourceSet.setRuntimeClasspath(mainSourceSet.getRuntimeClasspath().plus(dependencyMainSourceSet.getRuntimeClasspath()));
 		};
 	}
 
@@ -48,10 +59,10 @@ public class Modules {
 
 	public void apply(DependencyHandler handler) {
 		for (String module : this.apiModules) {
-			this.moduleProcessor.accept(handler, new Pair<>("modApi", module));
+			this.moduleProcessor.accept(handler, new Pair<>("api", module));
 		}
 		for (String module : this.implementationModules) {
-			this.moduleProcessor.accept(handler, new Pair<>("modImplementation", module));
+			this.moduleProcessor.accept(handler, new Pair<>("implementation", module));
 		}
 		if (this.includeContainer != null) {
 			if (!this.includeContainer.apiModules.isEmpty() || !this.includeContainer.implementationModules.isEmpty()) {
