@@ -185,8 +185,7 @@ public class MModdingGradleImpl implements MModdingGradle {
 	}
 
 	public void modules(Action<Modules> action) {
-		Modules modules = new Modules(this.project, false);
+		Modules modules = new Modules(this.project);
 		action.execute(modules);
-		modules.apply(this.project.getDependencies());
 	}
 }
