@@ -35,7 +35,7 @@ class QuiltModJsonTest extends Specification {
 		buildFile = new File(this.testProjectDir, "build.gradle.kts")
 		buildFile << """
 			plugins {
-				id("org.quiltmc.loom").version("1.8.+")
+				id("org.quiltmc.loom").version("1.10-SNAPSHOT")
 				id("com.mmodding.gradle").version("0.1.1-beta")
 			}
 
