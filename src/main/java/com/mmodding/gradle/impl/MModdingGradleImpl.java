@@ -43,7 +43,7 @@ public class MModdingGradleImpl implements MModdingGradle {
 			action.execute(modJson);
 
 			// Setup Generation Task
-			GenerateModJson<D, A, S, M> task = this.project.getTasks().create(taskType.getTaskName(), taskType.getTaskClass(), false);
+			GenerateModJson<D, A, S, M> task = this.project.getTasks().register(taskType.getTaskName(), taskType.getTaskClass(), false).get();
 			task.getModJson().set(modJson);
 			this.project.getTasks().getByPath("ideaSyncTask").dependsOn(task);
 
@@ -134,7 +134,7 @@ public class MModdingGradleImpl implements MModdingGradle {
 			testModJson.setVersion("1.0.0");
 			action.execute(testModJson);
 
-			GenerateFabricModJson generateTestModJsonTask = this.project.getTasks().create("generateTestModJson", GenerateFabricModJson.class, true);
+			GenerateFabricModJson generateTestModJsonTask = this.project.getTasks().register("generateTestModJson", GenerateFabricModJson.class, true).get();
 			generateTestModJsonTask.getModJson().set(testModJson);
 			this.project.getTasks().getByPath("ideaSyncTask").dependsOn(generateTestModJsonTask);
 

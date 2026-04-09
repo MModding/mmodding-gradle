@@ -6,7 +6,7 @@ plugins {
 
 group = "com.mmodding"
 version = "0.1.1-beta"
-val javaVersion = 17
+val javaVersion = 21
 
 repositories {
 	mavenCentral()
