@@ -5,8 +5,8 @@ plugins {
 }
 
 group = "com.mmodding"
-version = "0.1.2-beta"
-val javaVersion = 21
+version = "0.1.3-beta"
+val javaVersion = 25
 
 repositories {
 	mavenCentral()
@@ -29,7 +29,7 @@ sourceSets {
 dependencies {
 	compileOnly(libs.jetbrains.annotations)
 
-	compileOnly(libs.loom.fabric)
+	compileOnly(libs.loom)
 
 	implementation(libs.quilt.parsers.json)
 

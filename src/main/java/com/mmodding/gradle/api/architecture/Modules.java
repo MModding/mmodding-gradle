@@ -21,13 +21,13 @@ public class Modules {
 	}
 
 	public void api(String module) {
-		Dependency subProject = this.project.getDependencies().project(Map.of("path", ":" + module, "configuration", "namedElements"));
+		Dependency subProject = this.project.getDependencies().project(Map.of("path", ":" + module));
 		this.project.getDependencies().add("api", subProject);
 		this.handle(module);
 	}
 
 	public void implementation(String module) {
-		Dependency subProject = this.project.getDependencies().project(Map.of("path", ":" + module, "configuration", "namedElements"));
+		Dependency subProject = this.project.getDependencies().project(Map.of("path", ":" + module));
 		this.project.getDependencies().add("implementation", subProject);
 		this.handle(module);
 	}
