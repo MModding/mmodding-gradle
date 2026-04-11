@@ -8,7 +8,7 @@ loom = "1.16.+"
 quilt_parsers = "0.3.1"
 
 # Testing
-spock = "2.2-groovy-3.0"
+spock = "2.2-groovy-4.0"
 junit = "1.10.0"
 
 [libraries]
