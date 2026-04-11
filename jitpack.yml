@@ -1,4 +1,4 @@
 jdk:
-  - openjdk21
+  - openjdk25
 install:
   - ./gradlew clean -Pgroup=com.mmodding -xtest assemble publishToMavenLocal
