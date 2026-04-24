@@ -35,6 +35,11 @@ public class Modules {
 	public void include(String module) {
 		Dependency subProject = this.project.getDependencies().project(Map.of("path", ":" + module));
 		this.project.getDependencies().add("include", subProject);
+	}
+
+	public void bundle(String module) {
+		Dependency subProject = this.project.getDependencies().project(Map.of("path", ":" + module));
+		this.project.getDependencies().add("include", subProject);
 		this.project.getDependencies().add("api", subProject); // Exposed to everyone.
 	}
 
