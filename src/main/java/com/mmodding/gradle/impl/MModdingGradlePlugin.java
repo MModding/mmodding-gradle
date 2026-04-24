@@ -25,7 +25,8 @@ public class MModdingGradlePlugin implements Plugin<Project> {
 			"customFMJGeneration",
 			CustomModJsonGenerationTask.class,
 			task -> {
-				project.getTasks().getByName("processIncludeJars").dependsOn(task);
+				task.dependsOn(project.getTasks().getByName("processIncludeJars"));
+				project.getTasks().getByName("jar").dependsOn(task);
 				task.getOutputDirectory().set(project.getLayout().getBuildDirectory().dir("processIncludeJars"));
 			}
 		);
