@@ -98,5 +98,16 @@ tasks.check {
 publishing {
 	repositories {
 		mavenLocal()
+
+		if (providers.environmentVariable("MAVEN_USERNAME").isPresent) {
+			maven {
+				name = "MModding Maven Repository"
+				url = uri("https://maven.mmodding.com/releases")
+				credentials {
+					username = providers.environmentVariable("MAVEN_USERNAME").get()
+					password = providers.environmentVariable("MAVEN_PASSWORD").get()
+				}
+			}
+		}
 	}
 }
