@@ -8,10 +8,10 @@ import com.mmodding.gradle.api.mod.json.QuiltModJson;
 import com.mmodding.gradle.api.mod.json.dependency.ModDependency;
 import com.mmodding.gradle.api.mod.json.dependency.advanced.AdvancedDependencies;
 import com.mmodding.gradle.api.mod.json.dependency.simple.SimpleDependencies;
-import com.mmodding.gradle.api.testmod.TestModJson;
+import com.mmodding.gradle.api.testmod.TestmodJson;
 import com.mmodding.gradle.impl.task.GenerateFabricModJson;
 import com.mmodding.gradle.impl.task.GenerateModJson;
-import com.mmodding.gradle.impl.testmod.TestModJsonImpl;
+import com.mmodding.gradle.impl.testmod.TestmodJsonImpl;
 import com.mmodding.gradle.impl.util.LoomProvider;
 import com.mmodding.gradle.impl.util.TaskType;
 import org.gradle.api.Action;
@@ -93,7 +93,7 @@ public class MModdingGradleImpl implements MModdingGradle {
 	}
 
 	@Override
-	public void configureTestmod(Action<TestModJson> action) {
+	public void configureTestmod(Action<TestmodJson> action) {
 		if (this.project.getTasks().findByPath("generateTestModJson") == null) { // Check if initial setup already happened.
 			JavaPluginExtension javaExtension = this.project.getExtensions().getByType(JavaPluginExtension.class);
 			SourceSet mainSourceSet = javaExtension.getSourceSets().getByName("main");
@@ -129,7 +129,7 @@ public class MModdingGradleImpl implements MModdingGradle {
 			this.project.getDependencies().add("testmodImplementation", mainSourceSet.getOutput());
 
 			// FMJ Generation Task Configuration - that's a testmod, we don't make it really advanced
-			TestModJsonImpl testModJson = new TestModJsonImpl();
+			TestmodJsonImpl testModJson = new TestmodJsonImpl();
 			testModJson.setName(this.project.getName().replace("-", "_") + "_testmod");
 			testModJson.setVersion("1.0.0");
 			action.execute(testModJson);
@@ -142,7 +142,7 @@ public class MModdingGradleImpl implements MModdingGradle {
 		}
 		else {
 			GenerateFabricModJson generateTestModJsonTask = (GenerateFabricModJson) this.project.getTasks().getByName("generateTestModJson");
-			TestModJsonImpl testModJson = (TestModJsonImpl) generateTestModJsonTask.getModJson().get();
+			TestmodJsonImpl testModJson = (TestmodJsonImpl) generateTestModJsonTask.getModJson().get();
 			action.execute(testModJson);
 			generateTestModJsonTask.getModJson().set(testModJson);
 		}

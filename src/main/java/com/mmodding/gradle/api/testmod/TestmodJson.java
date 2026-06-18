@@ -8,7 +8,7 @@ import org.gradle.api.Action;
 import java.io.Serializable;
 
 
-public interface TestModJson extends Serializable {
+public interface TestmodJson extends Serializable {
 
 	String getNamespace();
 
