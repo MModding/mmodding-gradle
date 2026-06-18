@@ -4,8 +4,8 @@ plugins {
 	id("groovy")
 }
 
-group = "com.mmodding"
-version = "0.1.6-beta"
+group = property("group") as String
+version = property("version") as String
 val javaVersion = 25
 
 repositories {

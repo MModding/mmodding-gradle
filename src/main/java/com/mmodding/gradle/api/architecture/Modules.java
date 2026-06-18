@@ -49,7 +49,7 @@ public class Modules {
 		this.project.getDependencies().add("implementation", subProject); // Hidden from everyone.
 	}
 
-	public void testModImplementation(String module) {
+	public void testmodImplementation(String module) {
 		Dependency subProject = this.project.getDependencies().project(Map.of("path", ":" + module));
 		this.project.getDependencies().add("testmodImplementation", subProject);
 	}
